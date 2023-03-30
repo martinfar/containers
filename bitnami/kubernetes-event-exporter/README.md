@@ -4,21 +4,20 @@
 
 > Kubernetes Event Exporter makes it easy to export Kubernetes events to other tools, thereby enabling better event observability, custom alerts and aggregation.
 
-[Overview of Kubernetes Event Exporter](https://github.com/opsgenie/kubernetes-event-exporter)
-
+[Overview of Kubernetes Event Exporter](https://github.com/resmoio/kubernetes-event-exporter)
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run --name kubernetes-event-exporter bitnami/kubernetes-event-exporter:latest
+docker run --name kubernetes-event-exporter bitnami/kubernetes-event-exporter:latest
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/kubernetes-event-exporter/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/kubernetes-event-exporter/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 ## Why use Bitnami Images?
@@ -39,8 +38,9 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
-* [`0`, `0-debian-11`, `0.11.0`, `0.11.0-debian-11-r20`, `latest` (0/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/kubernetes-event-exporter/0/debian-11/Dockerfile)
+Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
 ## Connecting to other containers
 
@@ -54,21 +54,21 @@ Kubernetes Event Exporter is a tool created to be run inside a pod running on Ku
 
 Configuration is done via a YAML file, when run in Kubernetes, it's in ConfigMap. The tool watches all the events and user has to option to filter out some events, according to their properties.
 
-For further documentation, please check [Kubernetes Event Exporter documentation](https://github.com/opsgenie/kubernetes-event-exporter#configuration).
+For further documentation, please check [Kubernetes Event Exporter documentation](https://github.com/resmoio/kubernetes-event-exporter#configuration).
 
 ## Logging
 
 The Bitnami Kubernetes Event Exporter Docker image sends the container logs to the `stdout`. To view the logs:
 
 ```console
-$ docker logs kubernetes-event-exporter
+docker logs kubernetes-event-exporter
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -76,13 +76,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

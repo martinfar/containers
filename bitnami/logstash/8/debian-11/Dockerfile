@@ -1,27 +1,52 @@
 FROM docker.io/bitnami/minideb:bullseye
-ENV HOME="/" \
-    OS_ARCH="amd64" \
-    OS_FLAVOUR="debian-11" \
-    OS_NAME="linux"
 
 ARG JAVA_EXTRA_SECURITY_DIR="/bitnami/java/extra-security"
+ARG LOGSTASH_PLUGINS
+ARG TARGETARCH
+
+LABEL org.opencontainers.image.base.name="docker.io/bitnami/minideb:bullseye" \
+      org.opencontainers.image.created="2023-03-28T13:55:47Z" \
+      org.opencontainers.image.description="Application packaged by VMware, Inc" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.ref.name="8.6.2-debian-11-r10" \
+      org.opencontainers.image.title="logstash" \
+      org.opencontainers.image.vendor="VMware, Inc." \
+      org.opencontainers.image.version="8.6.2"
+
+ENV HOME="/" \
+    OS_ARCH="${TARGETARCH:-amd64}" \
+    OS_FLAVOUR="debian-11" \
+    OS_NAME="linux"
 
 COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
-RUN install_packages acl ca-certificates curl gzip libc6 procps tar zlib1g
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "java" "11.0.15-1-1" --checksum 6d176a8b3c894c608106fee2cf10aaf3771015defb0b7e08fe60ce6c9c1cd342
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "yq" "4.26.1-1" --checksum 502f4119e04d7a74508a38d64cccfc332e08fe42335828129d2bf5e694fbec32
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "logstash" "8.3.3-0" --checksum 5a54d84dc907e09d7b5ff6c3c175daff0486a63799cf793a57a6f7ab65d9b7e7
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.14.0-152" --checksum 0c751c7e2ec0bc900a19dbec0306d6294fe744ddfb0fa64197ba1a36040092f0
-RUN apt-get update && apt-get upgrade -y && \
-    rm -r /var/lib/apt/lists /var/cache/apt/archives
+RUN install_packages ca-certificates curl procps zlib1g
+RUN mkdir -p /tmp/bitnami/pkg/cache/ && cd /tmp/bitnami/pkg/cache/ && \
+    COMPONENTS=( \
+      "java-11.0.18-10-3-linux-${OS_ARCH}-debian-11" \
+      "yq-4.33.1-0-linux-${OS_ARCH}-debian-11" \
+      "logstash-8.6.2-1-linux-${OS_ARCH}-debian-11" \
+      "gosu-1.16.0-3-linux-${OS_ARCH}-debian-11" \
+    ) && \
+    for COMPONENT in "${COMPONENTS[@]}"; do \
+      if [ ! -f "${COMPONENT}.tar.gz" ]; then \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz" -O ; \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz.sha256" -O ; \
+      fi && \
+      sha256sum -c "${COMPONENT}.tar.gz.sha256" && \
+      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' && \
+      rm -rf "${COMPONENT}".tar.gz{,.sha256} ; \
+    done
+RUN apt-get autoremove --purge -y curl && \
+    apt-get update && apt-get upgrade -y && \
+    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 RUN chmod g+rwX /opt/bitnami
 
 COPY rootfs /
 RUN /opt/bitnami/scripts/java/postunpack.sh
 RUN /opt/bitnami/scripts/logstash/postunpack.sh
-ENV APP_VERSION="8.3.3" \
+ENV APP_VERSION="8.6.2" \
     BITNAMI_APP_NAME="logstash" \
     JAVA_HOME="/opt/bitnami/java" \
     PATH="/opt/bitnami/java/bin:/opt/bitnami/common/bin:/opt/bitnami/logstash/bin:$PATH"

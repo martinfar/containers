@@ -5,13 +5,12 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load libraries
 . /opt/bitnami/scripts/libsolr.sh
 . /opt/bitnami/scripts/libfs.sh
 . /opt/bitnami/scripts/libos.sh
-
 
 # Load solr environment variables
 . /opt/bitnami/scripts/solr-env.sh

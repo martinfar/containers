@@ -6,12 +6,10 @@
 
 [Overview of Spring Cloud Data Flow Shell](https://github.com/spring-cloud/spring-cloud-dataflow)
 
-
-
 ## TL;DR
 
 ```console
-$ docker run --name spring-cloud-dataflow-shell bitnami/spring-cloud-dataflow-shell:latest
+docker run --name spring-cloud-dataflow-shell bitnami/spring-cloud-dataflow-shell:latest
 ```
 
 ## Why use Bitnami Images?
@@ -27,8 +25,7 @@ $ docker run --name spring-cloud-dataflow-shell bitnami/spring-cloud-dataflow-sh
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`2`, `2-debian-11`, `2.9.4`, `2.9.4-debian-11-r24`, `latest` (2/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/spring-cloud-dataflow-shell/2/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -37,21 +34,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami spring-cloud-dataflow-shell Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/spring-cloud-dataflow-shell).
 
 ```console
-$ docker pull bitnami/spring-cloud-dataflow-shell:latest
+docker pull bitnami/spring-cloud-dataflow-shell:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/spring-cloud-dataflow-shell/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/spring-cloud-dataflow-shell:[TAG]
+docker pull bitnami/spring-cloud-dataflow-shell:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Configuration
@@ -61,14 +58,14 @@ $ docker build -t bitnami/APP:latest .
 To run commands inside this container you can use `docker run`, for example to execute `spring-cloud-dataflow-shell --help` you can follow the example below:
 
 ```console
-$ docker run --rm --name spring-cloud-dataflow-shell bitnami/spring-cloud-dataflow-shell:latest --help
+docker run --rm --name spring-cloud-dataflow-shell bitnami/spring-cloud-dataflow-shell:latest --help
 ```
 
 Consult the [spring-cloud-dataflow-shell Reference Documentation](https://docs.spring.io/spring-cloud-dataflow/docs/current/reference/htmlsingle/#shell) to find the completed list of commands available.
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -84,13 +81,13 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

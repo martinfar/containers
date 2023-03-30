@@ -5,13 +5,12 @@
 > Jsonnet is a data templating language for application and tool developers, based on JSON.
 
 [Overview of Jsonnet](https://jsonnet.org)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run --name jsonnet bitnami/jsonnet:latest
+docker run --name jsonnet bitnami/jsonnet:latest
 ```
 
 ## Why use Bitnami Images?
@@ -27,8 +26,7 @@ $ docker run --name jsonnet bitnami/jsonnet:latest
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`0`, `0-debian-11`, `0.18.0`, `0.18.0-debian-11-r21`, `latest` (0/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/jsonnet/0/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -37,21 +35,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami Git Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/jsonnet).
 
 ```console
-$ docker pull bitnami/jsonnet:latest
+docker pull bitnami/jsonnet:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/jsonnet/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/jsonnet:[TAG]
+docker pull bitnami/jsonnet:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Configuration
@@ -61,12 +59,12 @@ $ docker build -t bitnami/APP:latest .
 To run commands inside this container you can use `docker run`, for example to evaluate jsonnet code:
 
 ```console
-$ docker run --name jsonnet bitnami/jsonnet:latest -e "{hello: 'world'}"
+docker run --name jsonnet bitnami/jsonnet:latest -e "{hello: 'world'}"
 ```
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -82,13 +80,13 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

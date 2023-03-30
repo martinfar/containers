@@ -5,13 +5,10 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load WordPress environment
 . /opt/bitnami/scripts/wordpress-env.sh
-
-# Load WP-CLI environment for 'wp_execute' (after 'wordpress-env.sh' so that MODULE is not set to a wrong value)
-. /opt/bitnami/scripts/wp-cli-env.sh
 
 # Load PHP environment for 'wp_execute' (after 'wordpress-env.sh' so that MODULE is not set to a wrong value)
 . /opt/bitnami/scripts/php-env.sh

@@ -5,20 +5,19 @@
 > Argo Workflows is meant to orchestrate Kubernetes jobs in parallel. It uses DAG and step-based workflows
 
 [Overview of Argo Workflows](https://argoproj.github.io/workflows)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run -it --name argo-workflow-cli bitnami/argo-workflow-cli
+docker run -it --name argo-workflow-cli bitnami/argo-workflow-cli
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/bitnami-docker-argo-workflow-cli/master/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/argo-workflow-cli/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 ## Why use Bitnami Images?
@@ -42,29 +41,30 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
-* [`3`, `3-scratch`, `3.3.8`, `3.3.8-scratch-r6`, `latest` (3/scratch/Dockerfile)](https://github.com/bitnami/bitnami-docker-argo-workflows/blob/3.3.8-scratch-r6/3/scratch/      Dockerfile)
-
-Subscribe to project updates by watching the [bitnami/argo-workflow-cli GitHub repo](https://github.com/bitnami/bitnami-docker-argo-workflow-cli).
+Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
 ## Get this image
 
 The recommended way to get the Bitnami Argo Workflows CLI Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/argo-workflow-cli).
 
 ```console
-$ docker pull bitnami/argo-workflow-cli:latest
+docker pull bitnami/argo-workflow-cli:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/argo-workflow-cli/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/argo-workflow-cli:[TAG]
+docker pull bitnami/argo-workflow-cli:[TAG]
 ```
 
-If you wish, you can also build the image yourself.
+If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ docker build -t bitnami/argo-workflow-cli:latest 'https://github.com/bitnami/bitnami-docker-argo-workflow-cli.git#master:3/scratch'
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Maintenance
@@ -76,7 +76,7 @@ Bitnami provides up-to-date versions of Argo Workflows CLI, including security p
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/argo-workflow-cli:latest
+docker pull bitnami/argo-workflow-cli:latest
 ```
 
 or if you're using Docker Compose, update the value of the image property to `bitnami/argo-workflow-cli:latest`.
@@ -84,13 +84,13 @@ or if you're using Docker Compose, update the value of the image property to `bi
 #### Step 2: Remove the currently running container
 
 ```console
-$ docker rm -v argo-workflow-cli
+docker rm -v argo-workflow-cli
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose rm -v argo-workflow-cli
+docker-compose rm -v argo-workflow-cli
 ```
 
 #### Step 3: Run the new image
@@ -98,13 +98,13 @@ $ docker-compose rm -v argo-workflow-cli
 Re-create your container from the new image.
 
 ```console
-$ docker run --name argo-workflow-cli bitnami/argo-workflow-cli:latest
+docker run --name argo-workflow-cli bitnami/argo-workflow-cli:latest
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose up argo-workflow-cli
+docker-compose up argo-workflow-cli
 ```
 
 ## Configuration
@@ -114,35 +114,28 @@ $ docker-compose up argo-workflow-cli
 To run commands inside this container you can use `docker run`, for example to execute `argocd --help` you can follow the example below:
 
 ```console
-$ docker run --rm --name argo-workflow-cli bitnami/argo-workflow-cli:latest --help
+docker run --rm --name argo-workflow-cli bitnami/argo-workflow-cli:latest --help
 ```
 
-Check the [official Argo Workflows CLI documentation](https://argoproj.github.io/argo-workflows/cli/) for the list of the available parameters.
+Check the [official Argo Workflows CLI documentation](https://argoproj.github.io/argo-workflows/cli/argo/) for the list of the available parameters.
 
 ## Contributing
 
-We'd love for you to contribute to this Docker image. You can request new features by creating an [issue](https://github.com/bitnami/bitnami-docker-argo-workflow-cli/issues), or submit a [pull request](https://github.com/bitnami/bitnami-docker-argo-workflow-cli/pulls) with your contribution.
+We'd love for you to contribute to this Docker image. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
-If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/bitnami-docker-argo-workflow-cli/issues/new). For us to provide better support, be sure to include the following information in your issue:
-
-- Host OS and version
-- Docker version (`docker version`)
-- Output of `docker info`
-- Version of this container
-- The command you used to run the container, and any relevant output you saw (masking any sensitive
-information)
+If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/issues/new/choose). For us to provide better support, be sure to fill the issue template.
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

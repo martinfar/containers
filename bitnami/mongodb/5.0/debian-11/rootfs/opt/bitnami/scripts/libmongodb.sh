@@ -714,7 +714,7 @@ EOF
 
     if [[ -n "$MONGODB_METRICS_USERNAME" ]] && [[ -n "$MONGODB_METRICS_PASSWORD" ]]; then
         info "Creating '$MONGODB_METRICS_USERNAME' user..."
-        mongodb_execute 'root' "$MONGODB_ROOT_PASSWORD" "" "127.0.0.1" <<EOF
+        mongodb_execute "$MONGODB_ROOT_USER" "$MONGODB_ROOT_PASSWORD" "" "127.0.0.1" <<EOF
 db.getSiblingDB('admin').createUser({ user: '$MONGODB_METRICS_USERNAME', pwd: '$MONGODB_METRICS_PASSWORD', roles: [{role: 'clusterMonitor', db: 'admin'},{ role: 'read', db: 'local' }] })
 EOF
     fi
@@ -1071,7 +1071,7 @@ EOF
     if ! grep -q "user:" <<<"$result"; then
         # If no password was provided on first run
         # it may be the case that DB is up but has no users
-        [[ -z $password ]] && grep -q "\[\ \]" <<<"$result"
+        [[ -z $password ]] && grep -q "\[\]" <<<"$result"
     fi
 }
 
@@ -1613,6 +1613,8 @@ mongodb_execute_print_output() {
 mongodb_execute() {
     debug_execute mongodb_execute_print_output "$@"
 }
+
+# shellcheck disable=SC2148
 
 ########################
 # Execute an arbitrary query/queries against the running MongoDB service

@@ -1,0 +1,44 @@
+{
+    "gosu": {
+        "arch": "amd64",
+        "digest": "deadbeef",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.16.0-3"
+    },
+    "mongodb": {
+        "arch": "amd64",
+        "digest": "deadbeef",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "6.0.5-1"
+    },
+    "mongodb-shell": {
+        "arch": "amd64",
+        "digest": "deadbeef",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.8.0-1"
+    },
+    "render-template": {
+        "arch": "amd64",
+        "digest": "deadbeef",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.0.5-2"
+    },
+    "wait-for-port": {
+        "arch": "amd64",
+        "digest": "deadbeef",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.0.6-2"
+    },
+    "yq": {
+        "arch": "amd64",
+        "digest": "deadbeef",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "4.33.1-0"
+    }
+}

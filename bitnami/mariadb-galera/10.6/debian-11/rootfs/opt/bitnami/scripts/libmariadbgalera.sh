@@ -344,6 +344,7 @@ wsrep_sst_auth=${DB_GALERA_DEFAULT_MARIABACKUP_USER}:${DB_GALERA_DEFAULT_MARIABA
 wsrep_cluster_name=${DB_GALERA_DEFAULT_CLUSTER_NAME}
 wsrep_node_name=${DB_GALERA_DEFAULT_NODE_NAME}
 wsrep_node_address=${DB_GALERA_DEFAULT_NODE_ADDRESS}
+innodb_autoinc_lock_mode=2
 
 [mariadb]
 plugin_load_add = auth_pam
@@ -403,6 +404,10 @@ mysql_galera_update_custom_config() {
     local galera_auth_string="${DB_GALERA_MARIABACKUP_USER}:${DB_GALERA_MARIABACKUP_PASSWORD}"
     local default_auth_string="${DB_GALERA_DEFAULT_MARIABACKUP_USER}:${DB_GALERA_DEFAULT_MARIABACKUP_PASSWORD}"
     [[ "$galera_auth_string" != "$default_auth_string" ]] && mysql_conf_set "wsrep_sst_auth" "$galera_auth_string" "galera"
+
+    # Sanitize triple quotes produced by ini-file when using special characters like "`"
+    # https://github.com/bitnami/charts/issues/10880
+    replace_in_file "$DB_CONF_FILE" "=\"\"\"(.*)\"\"\"" "=\1"
 
     # Avoid exit code of previous commands to affect the result of this function
     true
@@ -891,7 +896,8 @@ mysql_execute_print_output() {
     if [[ -f "$DB_CONF_FILE" ]]; then
         args+=("--defaults-file=${DB_CONF_FILE}")
     fi
-    args+=("-N" "-u" "$user" "$db")
+    args+=("-N" "-u" "$user")
+    [[ -n "$db" ]] && args+=("$db")
     [[ -n "$pass" ]] && args+=("-p$pass")
     [[ "${#opts[@]}" -gt 0 ]] && args+=("${opts[@]}")
     [[ "${#extra_opts[@]}" -gt 0 ]] && args+=("${extra_opts[@]}")
@@ -1071,7 +1077,7 @@ mysql_stop() {
         for f in "${db_files[@]}"; do
             debug_execute fuser "$f" && return_value=1
         done
-        return $return_value
+        return "$return_value"
     }
 
     ! is_mysql_running && return
@@ -1098,6 +1104,11 @@ mysql_stop() {
 mysql_install_db() {
     local command="${DB_BIN_DIR}/mysql_install_db"
     local -a args=("--defaults-file=${DB_CONF_FILE}" "--basedir=${DB_BASE_DIR}" "--datadir=${DB_DATA_DIR}")
+    
+    # Add flags specified via the 'DB_EXTRA_FLAGS' environment variable
+    read -r -a db_extra_flags <<< "$(mysql_extra_flags)"
+    [[ "${#db_extra_flags[@]}" -gt 0 ]] && args+=("${db_extra_flags[@]}")
+
     am_i_root && args=("${args[@]}" "--user=$DB_DAEMON_USER")
     if [[ "$DB_FLAVOR" = "mariadb" ]]; then
         args+=("--auth-root-authentication-method=normal")
@@ -1140,7 +1151,7 @@ mysql_upgrade() {
     else
         mysql_start_bg
         is_boolean_yes "${ROOT_AUTH_ENABLED:-false}" && args+=("-p$(get_master_env_var_value ROOT_PASSWORD)")
-        debug_execute "${DB_BIN_DIR}/mysql_upgrade" "${args[@]}" --force
+        debug_execute "${DB_BIN_DIR}/mysql_upgrade" "${args[@]}" || echo "This installation is already upgraded"
     fi
 }
 

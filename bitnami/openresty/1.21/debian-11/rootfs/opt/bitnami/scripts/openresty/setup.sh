@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load libraries
 . /opt/bitnami/scripts/libos.sh
@@ -26,6 +26,9 @@ am_i_root && ensure_user_exists "$OPENRESTY_DAEMON_USER" --group "$OPENRESTY_DAE
 
 # Fix logging issue when running as root
 ! am_i_root || chmod o+w "$(readlink /dev/stdout)" "$(readlink /dev/stderr)"
+
+# Execute init scripts
+openresty_custom_init_scripts
 
 # Initialize OpenResty
 openresty_initialize

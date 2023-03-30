@@ -28,6 +28,7 @@ airflow_env_vars=(
     AIRFLOW_LASTNAME
     AIRFLOW_EMAIL
     AIRFLOW_EXECUTOR
+    AIRFLOW_RAW_FERNET_KEY
     AIRFLOW_FERNET_KEY
     AIRFLOW_SECRET_KEY
     AIRFLOW_WEBSERVER_HOST
@@ -89,6 +90,7 @@ export AIRFLOW_WEBSERVER_CONF_FILE="${AIRFLOW_BASE_DIR}/webserver_config.py"
 export AIRFLOW_TMP_DIR="${AIRFLOW_BASE_DIR}/tmp"
 export AIRFLOW_PID_FILE="${AIRFLOW_TMP_DIR}/airflow-webserver.pid"
 export AIRFLOW_DAGS_DIR="${AIRFLOW_BASE_DIR}/dags"
+export PATH="${AIRFLOW_BIN_DIR}:${BITNAMI_ROOT_DIR}/common/bin:${PATH}"
 
 # System users (when running with a privileged user)
 export AIRFLOW_DAEMON_USER="airflow"
@@ -103,6 +105,7 @@ export AIRFLOW_EMAIL="${AIRFLOW_EMAIL:-user@example.com}"
 
 # Airflow configuration
 export AIRFLOW_EXECUTOR="${AIRFLOW_EXECUTOR:-SequentialExecutor}"
+export AIRFLOW_RAW_FERNET_KEY="${AIRFLOW_RAW_FERNET_KEY:-}"
 export AIRFLOW_FERNET_KEY="${AIRFLOW_FERNET_KEY:-}"
 export AIRFLOW_SECRET_KEY="${AIRFLOW_SECRET_KEY:-}"
 export AIRFLOW_WEBSERVER_HOST="${AIRFLOW_WEBSERVER_HOST:-127.0.0.1}"

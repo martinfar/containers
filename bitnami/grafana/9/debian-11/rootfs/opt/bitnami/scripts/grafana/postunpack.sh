@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load Grafana environment
 . /opt/bitnami/scripts/grafana-env.sh
@@ -28,6 +28,9 @@ for dir in "$(grafana_env_var_value PATHS_DATA)" "$(grafana_env_var_value PATHS_
     # Use grafana:root ownership for compatibility when running as a non-root user
     configure_permissions_ownership "$dir" -d "775" -f "664" -u "$GRAFANA_DAEMON_USER" -g "root"
 done
+
+# Use grafana:root ownership for compatibility when running as a non-root user
+configure_permissions_ownership "$(grafana_env_var_value PATHS_CONFIG)" -f "664" -u "$GRAFANA_DAEMON_USER" -g "root"
 
 # Ensure permissions to parent directories of configs
 # Used when replacing configs with symlinks for grafana-operator compatibility

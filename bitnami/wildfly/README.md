@@ -5,20 +5,19 @@
 > Wildfly is a lightweight, open source application server, formerly known as JBoss, that implements the latest enterprise Java standards.
 
 [Overview of WildFly](http://www.wildfly.org/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run --name wildfly bitnami/wildfly:latest
+docker run --name wildfly bitnami/wildfly:latest
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/wildfly/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/wildfly/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 ## Why use Bitnami Images?
@@ -44,8 +43,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`26`, `26-debian-11`, `26.1.1`, `26.1.1-debian-11-r24`, `latest` (26/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/wildfly/26/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -54,21 +52,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami WildFly Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/wildfly).
 
 ```console
-$ docker pull bitnami/wildfly:latest
+docker pull bitnami/wildfly:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/wildfly/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/wildfly:[TAG]
+docker pull bitnami/wildfly:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Persisting your application
@@ -78,7 +76,7 @@ If you remove the container all your data and configurations will be lost, and t
 For persistence you should mount a directory at the `/bitnami/wildfly` path. If the mounted directory is empty, it will be initialized on the first run.
 
 ```console
-$ docker run -p 8080:8080 -p 9990:9990 \
+docker run -p 8080:8080 -p 9990:9990 \
     -v /path/to/wildfly-persistence:/bitnami/wildfly \
     bitnami/wildfly:latest
 ```
@@ -103,7 +101,7 @@ The Bitnami WildFly image launches WildFLy in standalone mode. Therefore, you ca
 Additionally a helper symlink `/app` is present that points to the deployments directory which enables us to deploy applications on a running WildFly instance by simply doing:
 
 ```console
-$ docker cp /path/to/app.war wildfly:/app
+docker cp /path/to/app.war wildfly:/app
 ```
 
 Find more information about the directory structue at [WildFly official documentation](https://docs.wildfly.org/23/Getting_Started_Guide.html#standalone-directory-structure)
@@ -115,7 +113,7 @@ Find more information about the directory structue at [WildFly official document
 The Bitnami WildFly image exposes the application server on port `8080` and the management console on port `9990`. To access your web server from your host machine you can ask Docker to map random ports on your host to the ports `8080` and `9990` of the container.
 
 ```console
-$ docker run --name wildfly -P bitnami/wildfly:latest
+docker run --name wildfly -P bitnami/wildfly:latest
 ```
 
 Run `docker port` to determine the random ports Docker assigned.
@@ -129,7 +127,7 @@ $ docker port wildfly
 You can also manually specify the ports you want forwarded from your host to the container.
 
 ```console
-$ docker run -p 8080:8080 -p 9990:9990 bitnami/wildfly:latest
+docker run -p 8080:8080 -p 9990:9990 bitnami/wildfly:latest
 ```
 
 Access your web server in the browser by navigating to `http://localhost:8080` to access the application server and `http://localhost:9990/console` to access the management console.
@@ -145,7 +143,7 @@ The command line management tool `jboss-cli.sh` allows a user to connect to the 
 #### Step 1: Create a network
 
 ```console
-$ docker network create wildfly-tier --driver bridge
+docker network create wildfly-tier --driver bridge
 ```
 
 #### Step 2: Launch the WildFly server instance
@@ -153,7 +151,7 @@ $ docker network create wildfly-tier --driver bridge
 Use the `--network wildfly-tier` argument to the `docker run` command to attach the WildFly container to the `wildfly-tier` network.
 
 ```console
-$ docker run -d --name wildfly-server \
+docker run -d --name wildfly-server \
     --network wildfly-tier \
     bitnami/wildfly:latest
 ```
@@ -163,7 +161,7 @@ $ docker run -d --name wildfly-server \
 Finally we create a new container instance to launch the WildFly client and connect to the server created in the previous step:
 
 ```console
-$ docker run -it --rm \
+docker run -it --rm \
     --network wildfly-tier \
     bitnami/wildfly:latest \
     jboss-cli.sh --controller=wildfly-server:9990 --connect
@@ -185,7 +183,7 @@ By default, a management user named `user` is created with the default password 
 Additionally you can specify a user name for the management user using the `WILDFLY_USERNAME` environment variable. When not specified, the `WILDFLY_PASSWORD` configuration is applied on the default user (`user`).
 
 ```console
-$ docker run --name wildfly \
+docker run --name wildfly \
     -e WILDFLY_USERNAME=my_user \
     -e WILDFLY_PASSWORD=my_password \
     bitnami/wildfly:latest
@@ -208,7 +206,7 @@ services:
 The image looks for configurations (e.g. `standalone.xml`) in the `/bitnami/wildfly/configuration/` directory, this directory can be changed by setting the `WILDFLY_MOUNTED_CONF_DIR` environment variable.
 
 ```console
-$ docker run --name wildfly \
+docker run --name wildfly \
     -v /path/to/standalone.xml:/bitnami/wildfly/configuration/standalone.xml \
     bitnami/wildfly:latest
 ```
@@ -231,13 +229,13 @@ After that, your changes will be taken into account in the server's behaviour.
 The Bitnami WildFly Docker image sends the container logs to the `stdout`. To view the logs:
 
 ```console
-$ docker logs wildfly
+docker logs wildfly
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose logs wildfly
+docker-compose logs wildfly
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -251,7 +249,7 @@ Bitnami provides up-to-date versions of WildFly, including security patches, soo
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/wildfly:latest
+docker pull bitnami/wildfly:latest
 ```
 
 or if you're using Docker Compose, update the value of the image property to `bitnami/wildfly:latest`.
@@ -261,31 +259,31 @@ or if you're using Docker Compose, update the value of the image property to `bi
 Stop the currently running container using the command
 
 ```console
-$ docker stop wildfly
+docker stop wildfly
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose stop wildfly
+docker-compose stop wildfly
 ```
 
 Next, take a snapshot of the persistent volume `/path/to/wildfly-persistence` using:
 
 ```console
-$ rsync -a /path/to/wildfly-persistence /path/to/wildfly-persistence.bkp.$(date +%Y%m%d-%H.%M.%S)
+rsync -a /path/to/wildfly-persistence /path/to/wildfly-persistence.bkp.$(date +%Y%m%d-%H.%M.%S)
 ```
 
 #### Step 3: Remove the currently running container
 
 ```console
-$ docker rm -v wildfly
+docker rm -v wildfly
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose rm -v wildfly
+docker-compose rm -v wildfly
 ```
 
 #### Step 4: Run the new image
@@ -293,43 +291,43 @@ $ docker-compose rm -v wildfly
 Re-create your container from the new image.
 
 ```console
-$ docker run --name wildfly bitnami/wildfly:latest
+docker run --name wildfly bitnami/wildfly:latest
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose up wildfly
+docker-compose up wildfly
 ```
 
 ## Notable Changes
 
 ### 22.0.1-debian-10-r68 and 23.0.1-debian-10-r8 release
 
-- The size of the container image has been decreased.
-- The configuration logic is now based on Bash scripts in the *rootfs/* folder.
-- The configuration is no longer persisted, instead it's adapted based on environment variables during the container initialization on every container restart. You can also mount custom configuration files and skip the configuration based on environment variables as it's detailed in [this section](#full-configuration).
+* The size of the container image has been decreased.
+* The configuration logic is now based on Bash scripts in the *rootfs/* folder.
+* The configuration is no longer persisted, instead it's adapted based on environment variables during the container initialization on every container restart. You can also mount custom configuration files and skip the configuration based on environment variables as it's detailed in [this section](#full-configuration).
 
 Consequences:
 
-- Backwards compatibility should be possible, but it is highly recommended to backup your application data before upgrading.
+* Backwards compatibility should be possible, but it is highly recommended to backup your application data before upgrading.
 
 ### 14.0.1-r75
 
-- The WildFly container has been migrated to a non-root user approach. Previously the container ran as the `root` user and the WildFly daemon was started as the `wildfly` user. From now on, both the container and the WildFly daemon run as user `1001`. As a consequence, the data directory must be writable by that user. You can revert this behavior by changing `USER 1001` to `USER root` in the Dockerfile.
+* The WildFly container has been migrated to a non-root user approach. Previously the container ran as the `root` user and the WildFly daemon was started as the `wildfly` user. From now on, both the container and the WildFly daemon run as user `1001`. As a consequence, the data directory must be writable by that user. You can revert this behavior by changing `USER 1001` to `USER root` in the Dockerfile.
 
 ### 10.0.0-r3
 
-- `WILDFLY_USER` parameter has been renamed to `WILDFLY_USERNAME`.
+* `WILDFLY_USER` parameter has been renamed to `WILDFLY_USERNAME`.
 
 ### 10.0.0-r0
 
-- All volumes have been merged at `/bitnami/wildfly`. Now you only need to mount a single volume at `/bitnami/wildfly` for persistence.
-- The logs are always sent to the `stdout` and are no longer collected in the volume.
+* All volumes have been merged at `/bitnami/wildfly`. Now you only need to mount a single volume at `/bitnami/wildfly` for persistence.
+* The logs are always sent to the `stdout` and are no longer collected in the volume.
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -337,13 +335,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

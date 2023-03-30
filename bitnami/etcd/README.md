@@ -5,20 +5,19 @@
 > etcd is a distributed key-value store designed to securely store data across a cluster. etcd is widely used in production on account of its reliability, fault-tolerance and ease of use.
 
 [Overview of Etcd](https://etcd.io/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run -it --name Etcd bitnami/etcd
+docker run -it --name Etcd bitnami/etcd
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/etcd/docker-compose.yml
-$ docker-compose up
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/etcd/docker-compose.yml
+docker-compose up
 ```
 
 ## Why use Bitnami Images?
@@ -44,10 +43,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`3.5`, `3.5-debian-11`, `3.5.4`, `3.5.4-debian-11-r20`, `latest` (3.5/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/etcd/3.5/debian-11/Dockerfile)
-* [`3.4`, `3.4-debian-11`, `3.4.19`, `3.4.19-debian-11-r7` (3.4/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/etcd/3.4/debian-11/Dockerfile)
-* [`3.3`, `3.3-debian-11`, `3.3.27`, `3.3.27-debian-11-r21` (3.3/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/etcd/3.3/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -60,7 +56,7 @@ To run this application you need [Docker Engine](https://www.docker.com/products
 The recommended way to get the Bitnami Etcd Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/etcd).
 
 ```console
-$ docker pull bitnami/etcd:latest
+docker pull bitnami/etcd:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the
@@ -68,15 +64,15 @@ To use a specific version, you can pull a versioned tag. You can view the
 in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/etcd:[TAG]
+docker pull bitnami/etcd:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Connecting to other containers
@@ -92,7 +88,7 @@ In this example, we will create a Etcd client instance that will connect to the 
 #### Step 1: Create a network
 
 ```console
-$ docker network create app-tier --driver bridge
+docker network create app-tier --driver bridge
 ```
 
 #### Step 2: Launch the Etcd server instance
@@ -100,7 +96,7 @@ $ docker network create app-tier --driver bridge
 Use the `--network app-tier` argument to the `docker run` command to attach the Etcd container to the `app-tier` network.
 
 ```console
-$ docker run -d --name Etcd-server \
+docker run -d --name Etcd-server \
     --network app-tier \
     --publish 2379:2379 \
     --publish 2380:2380 \
@@ -114,13 +110,13 @@ $ docker run -d --name Etcd-server \
 Finally we create a new container instance to launch the Etcd client and connect to the server created in the previous step:
 
 ```console
-$ docker run -it --rm \
+docker run -it --rm \
     --network app-tier \
     --env ALLOW_NONE_AUTHENTICATION=yes \
     bitnami/etcd:latest etcdctl --endpoints http://etcd-server:2379 put /message Hello
 ```
 
-### Using Docker Compose
+### Using a Docker Compose file
 
 When not specified, Docker Compose automatically sets up a new network and attaches all deployed services to that network. However, we will explicitly define a new `bridge` network named `app-tier`. In this example we assume that you want to connect to the Etcd server from your own custom application image which is identified in the following snippet by the service name `myapp`.
 
@@ -156,7 +152,7 @@ services:
 Launch the containers using:
 
 ```console
-$ docker-compose up -d
+docker-compose up -d
 ```
 
 ## Configuration
@@ -164,7 +160,7 @@ $ docker-compose up -d
 The configuration can easily be setup by mounting your own configuration file on the directory `/opt/bitnami/etcd/conf`:
 
 ```console
-$ docker run --name Etcd -v /path/to/Etcd.conf.yml:/opt/bitnami/Etcd/conf/etcd.conf.yml bitnami/etcd:latest
+docker run --name Etcd -v /path/to/Etcd.conf.yml:/opt/bitnami/Etcd/conf/etcd.conf.yml bitnami/etcd:latest
 ```
 
 After that, your configuration will be taken into account in the server's behaviour.
@@ -197,7 +193,7 @@ The previous rule applies to all [etcd flags](https://coreos.com/etcd/docs/lates
 
 ### 3.4.13-debian-10-r7
 
-* Arbitrary user ID(s) are supported again, see https://github.com/etcd-io/etcd/issues/12158 for more information abut the changes in the upstream source code
+* Arbitrary user ID(s) are supported again, see <https://github.com/etcd-io/etcd/issues/12158> for more information abut the changes in the upstream source code
 
 ### 3.4.10-debian-10-r0
 
@@ -209,7 +205,7 @@ For further documentation, please check [Etcd documentation](https://coreos.com/
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -217,13 +213,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

@@ -5,7 +5,6 @@
 > Express is a minimal and unopinionated Node.js web application framework.
 
 [Overview of Express](https://expressjs.com/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
@@ -13,9 +12,9 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 ### Local workspace
 
 ```console
-$ mkdir ~/myapp && cd ~/myapp
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/express/docker-compose.yml
-$ docker-compose up
+mkdir ~/myapp && cd ~/myapp
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/express/docker-compose.yml
+docker-compose up
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options for the [MongoDB&reg; container](https://github.com/bitnami/containers/blob/main/bitnami/mongodb#readme) for a more secure deployment.
@@ -29,12 +28,11 @@ $ docker-compose up
 * All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
-# Supported tags and respective `Dockerfile` links
+## Supported tags and respective `Dockerfile` links
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`4`, `4-debian-11`, `4.18.1`, `4.18.1-debian-11-r24`, `latest` (4/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/express/4/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -60,13 +58,13 @@ cd ~/myapp
 Download the [docker-compose.yml](https://raw.githubusercontent.com/bitnami/containers/main/bitnami/express/docker-compose.yml) file in the application directory:
 
 ```console
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/express/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/express/docker-compose.yml
 ```
 
 Finally launch the Express application development environment using:
 
 ```console
-$ docker-compose up
+docker-compose up
 ```
 
 Among other things, the above command creates a container service, named `myapp`, for Express development and bootstraps a new Express application in the application directory. You can use your favorite IDE for developing the application.
@@ -90,30 +88,30 @@ Commands can be launched inside the `myapp` Express Development Container with `
 The general structure of the `exec` command is:
 
 ```console
-$ docker-compose exec <service> <command>
+docker-compose exec <service> <command>
 ```
 
 , where `<service>` is the name of the container service as described in the `docker-compose.yml` file and `<command>` is the command you want to launch inside the service.
 
 Following are a few examples of launching some commonly used Express development commands inside the `myapp` service container.
 
-- Load the Node.js REPL:
+* Load the Node.js REPL:
 
   ```console
-  $ docker-compose exec myapp node
+  docker-compose exec myapp node
   ```
 
-- List installed NPM modules:
+* List installed NPM modules:
 
   ```console
-  $ docker-compose exec myapp npm ls
+  docker-compose exec myapp npm ls
   ```
 
-- Install a NPM module:
+* Install a NPM module:
 
   ```console
-  $ docker-compose exec myapp npm install bootstrap --save
-  $ docker-compose restart myapp
+  docker-compose exec myapp npm install bootstrap --save
+  docker-compose restart myapp
   ```
 
 ## Connecting to Database
@@ -128,27 +126,27 @@ The Express Development Container generates a Dockerfile in your working directo
 
 1. Build your Docker image
 
-  ```console
-  $ docker build -t myregistry/myapp:1.0.0
-  ```
+    ```console
+    docker build -t myregistry/myapp:1.0.0
+    ```
 
 2. Push to an image registry
 
-  ```console
-  $ docker push myregistry/myapp:1.0.0
-  ```
+   ```console
+   docker push myregistry/myapp:1.0.0
+   ```
 
 3. Update orchestration files to reference the pushed image
 
 ## Issues
 
-If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/blob/main/bitnami/express/issues/new). Be sure to include the following information in your issue:
+If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/issues/new). Be sure to include the following information in your issue:
 
-- Host OS and version
-- Docker version (`docker version`)
-- Output of `docker info`
-- Version of this container
-- The command you used to run the container, and any relevant output you saw (masking any sensitive information)
+* Host OS and version
+* Docker version (`docker version`)
+* Output of `docker info`
+* Version of this container
+* The command you used to run the container, and any relevant output you saw (masking any sensitive information)
 
 ### Community supported solution
 
@@ -160,13 +158,13 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

@@ -1,6 +1,18 @@
 FROM docker.io/bitnami/minideb:bullseye
+
+ARG TARGETARCH
+
+LABEL org.opencontainers.image.base.name="docker.io/bitnami/minideb:bullseye" \
+      org.opencontainers.image.created="2023-03-27T23:41:50Z" \
+      org.opencontainers.image.description="Application packaged by VMware, Inc" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.ref.name="3.8.1-debian-11-r17" \
+      org.opencontainers.image.title="zookeeper" \
+      org.opencontainers.image.vendor="VMware, Inc." \
+      org.opencontainers.image.version="3.8.1"
+
 ENV HOME="/" \
-    OS_ARCH="amd64" \
+    OS_ARCH="${TARGETARCH:-amd64}" \
     OS_FLAVOUR="debian-11" \
     OS_NAME="linux" \
     PATH="/opt/bitnami/common/bin:/opt/bitnami/java/bin:/opt/bitnami/zookeeper/bin:$PATH"
@@ -8,20 +20,33 @@ ENV HOME="/" \
 COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
-RUN install_packages acl ca-certificates curl gzip libc6 netcat procps tar zlib1g
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "wait-for-port" "1.0.3-152" --checksum 0694ae67645c416d9f6875e90c0f7cef379b4ac8030a6a5b8b5cc9ca77c6975d
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "java" "11.0.15-1-1" --checksum 6d176a8b3c894c608106fee2cf10aaf3771015defb0b7e08fe60ce6c9c1cd342
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.14.0-152" --checksum 0c751c7e2ec0bc900a19dbec0306d6294fe744ddfb0fa64197ba1a36040092f0
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "zookeeper" "3.8.0-152" --checksum 6353569153506a0c740438f7deee2bdf13b9bdbf9d0a0b2b3966b030872772bc
-RUN apt-get update && apt-get upgrade -y && \
-    rm -r /var/lib/apt/lists /var/cache/apt/archives
+RUN install_packages ca-certificates curl netcat procps xmlstarlet zlib1g
+RUN mkdir -p /tmp/bitnami/pkg/cache/ && cd /tmp/bitnami/pkg/cache/ && \
+    COMPONENTS=( \
+      "wait-for-port-1.0.6-2-linux-${OS_ARCH}-debian-11" \
+      "java-11.0.18-10-3-linux-${OS_ARCH}-debian-11" \
+      "gosu-1.16.0-3-linux-${OS_ARCH}-debian-11" \
+      "zookeeper-3.8.1-3-linux-${OS_ARCH}-debian-11" \
+    ) && \
+    for COMPONENT in "${COMPONENTS[@]}"; do \
+      if [ ! -f "${COMPONENT}.tar.gz" ]; then \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz" -O ; \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz.sha256" -O ; \
+      fi && \
+      sha256sum -c "${COMPONENT}.tar.gz.sha256" && \
+      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' && \
+      rm -rf "${COMPONENT}".tar.gz{,.sha256} ; \
+    done
+RUN apt-get autoremove --purge -y curl && \
+    apt-get update && apt-get upgrade -y && \
+    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 RUN chmod g+rwX /opt/bitnami
 RUN ln -s /opt/bitnami/scripts/zookeeper/entrypoint.sh /entrypoint.sh
 RUN ln -s /opt/bitnami/scripts/zookeeper/run.sh /run.sh
 
 COPY rootfs /
 RUN /opt/bitnami/scripts/zookeeper/postunpack.sh
-ENV APP_VERSION="3.8.0" \
+ENV APP_VERSION="3.8.1" \
     BITNAMI_APP_NAME="zookeeper"
 
 EXPOSE 2181 2888 3888 8080

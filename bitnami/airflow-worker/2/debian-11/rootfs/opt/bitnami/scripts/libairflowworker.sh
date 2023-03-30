@@ -32,6 +32,18 @@ airflow_worker_validate() {
     # Check postgresql host
     [[ -z "$AIRFLOW_DATABASE_HOST" ]] && print_validation_error "Missing AIRFLOW_DATABASE_HOST"
 
+    # Check cryptography parameters
+    if [[ -n "$AIRFLOW_RAW_FERNET_KEY" && -z "$AIRFLOW_FERNET_KEY" ]]; then
+        local fernet_char_count
+        fernet_char_count="$(echo -n "$AIRFLOW_RAW_FERNET_KEY")"
+        if [[ "$fernet_char_count" -lt 32 ]]; then
+            print_validation_error "AIRFLOW_RAW_FERNET_KEY must have at least 32 characters"
+        elif [[ "$fernet_char_count" -gt 32 ]]; then
+            warn "AIRFLOW_RAW_FERNET_KEY has more than 32 characters, the rest will be ignored"
+        fi
+        AIRFLOW_FERNET_KEY="$(echo -n "${AIRFLOW_RAW_FERNET_KEY:0:32}" | base64)"
+    fi
+
     # Avoid fail because of the above check
     true
 }
@@ -46,6 +58,11 @@ airflow_worker_validate() {
 #   None
 #########################
 airflow_worker_initialize() {
+    # Remove airflow-worker.pid file if exists to prevent error after WSL restarts
+    if [ -f "$AIRFLOW_PID_FILE" ]; then
+        rm "$AIRFLOW_PID_FILE"
+    fi
+
     # Change permissions if running as root
     for dir in "$AIRFLOW_TMP_DIR" "$AIRFLOW_LOGS_DIR"; do
         ensure_dir_exists "$dir"
@@ -69,11 +86,13 @@ airflow_worker_initialize() {
     done
 
     # Wait for airflow webserver to be available
-    info "Waiting for Airflow Webserser to be up"
+    info "Waiting for Airflow Webserver to be up"
     airflow_worker_wait_for_webserver "$AIRFLOW_WEBSERVER_HOST" "$AIRFLOW_WEBSERVER_PORT_NUMBER"
-    [[ "$AIRFLOW_EXECUTOR" == "CeleryExecutor" || "$AIRFLOW_EXECUTOR" == "CeleryKubernetesExecutor"  ]] && wait-for-port --host "$REDIS_HOST" "$REDIS_PORT_NUMBER"
+    if [[ "$AIRFLOW_EXECUTOR" == "CeleryExecutor" || "$AIRFLOW_EXECUTOR" == "CeleryKubernetesExecutor"  ]]; then
+        wait-for-port --host "$REDIS_HOST" "$REDIS_PORT_NUMBER"
+    fi
 
-    # Avoid to fail when the executor is not celery
+    # Avoid exit code of previous commands to affect the result of this function
     true
 }
 

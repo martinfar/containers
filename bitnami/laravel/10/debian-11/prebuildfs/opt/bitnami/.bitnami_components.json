@@ -1,0 +1,38 @@
+{
+    "gosu": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.16.0-3"
+    },
+    "laravel": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "10.0.5-0"
+    },
+    "node": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "18.15.0-1"
+    },
+    "php": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "8.1.17-3"
+    },
+    "python": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "3.8.16-8"
+    },
+    "wait-for-port": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.0.6-2"
+    }
+}

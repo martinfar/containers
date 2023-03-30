@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load libraries
 . /opt/bitnami/scripts/liblogstash.sh
@@ -21,3 +21,5 @@ am_i_root && ensure_user_exists "$LOGSTASH_DAEMON_USER" --group "$LOGSTASH_DAEMO
 
 # Ensure Logstash is initialized
 logstash_initialize
+# Install Logstash plugins
+logstash_install_plugins

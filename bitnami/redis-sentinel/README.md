@@ -5,20 +5,19 @@
 > Redis&reg; Sentinel provides high availability for Redis. Redis Sentinel also provides other collateral tasks such as monitoring, notifications and acts as a configuration provider for clients.
 
 [Overview of Redis&reg; Sentinel](http://redis.io/)
-
 Disclaimer: Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Bitnami is for referential purposes only and does not indicate any sponsorship, endorsement, or affiliation between Redis Ltd.
 
 ## TL;DR
 
 ```console
-$ docker run --name redis-sentinel -e REDIS_MASTER_HOST=redis bitnami/redis-sentinel:latest
+docker run --name redis-sentinel -e REDIS_MASTER_HOST=redis bitnami/redis-sentinel:latest
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/redis-sentinel/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/redis-sentinel/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options in the [Environment Variables](#environment-variables) section for a more secure deployment.
@@ -40,9 +39,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`7.0`, `7.0-debian-11`, `7.0.4`, `7.0.4-debian-11-r4`, `latest` (7.0/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/redis-sentinel/7.0/debian-11/Dockerfile)
-* [`6.2`, `6.2-debian-11`, `6.2.7`, `6.2.7-debian-11-r22` (6.2/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/redis-sentinel/6.2/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -51,21 +48,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami Redis(R) Sentinel Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/redis-sentinel).
 
 ```console
-$ docker pull bitnami/redis-sentinel:latest
+docker pull bitnami/redis-sentinel:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/redis-sentinel/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/redis-sentinel:[TAG]
+docker pull bitnami/redis-sentinel:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Connecting to other containers
@@ -81,7 +78,7 @@ In this example, we will create a Redis(R) Sentinel instance that will monitor a
 #### Step 1: Create a network
 
 ```console
-$ docker network create app-tier --driver bridge
+docker network create app-tier --driver bridge
 ```
 
 #### Step 2: Launch the Redis(R) instance
@@ -89,7 +86,7 @@ $ docker network create app-tier --driver bridge
 Use the `--network app-tier` argument to the `docker run` command to attach the Redis(R) container to the `app-tier` network.
 
 ```console
-$ docker run -d --name redis-server \
+docker run -d --name redis-server \
     -e ALLOW_EMPTY_PASSWORD=yes \
     --network app-tier \
     bitnami/redis:latest
@@ -100,13 +97,13 @@ $ docker run -d --name redis-server \
 Finally we create a new container instance to launch the Redis(R) client and connect to the server created in the previous step:
 
 ```console
-$ docker run -it --rm \
+docker run -it --rm \
     -e REDIS_MASTER_HOST=redis-server \
     --network app-tier \
     bitnami/redis-sentinel:latest
 ```
 
-### Using Docker Compose
+### Using a Docker Compose file
 
 When not specified, Docker Compose automatically sets up a new network and attaches all deployed services to that network. However, we will explicitly define a new `bridge` network named `app-tier`. In this example we assume that you want to connect to the Redis(R) server from your own custom application image which is identified in the following snippet by the service name `myapp`.
 
@@ -137,12 +134,12 @@ services:
 Launch the containers using:
 
 ```console
-$ docker-compose up -d
+docker-compose up -d
 ```
 
 #### Using Master-Slave setups
 
-When using Sentinel in Master-Slave setup, if you want to set the passwords for Master and Slave nodes, consider having the **same** `REDIS_PASSWORD` and `REDIS_MASTER_PASSWORD` for them ([#23](https://github.com/bitnami/bitnami-docker-redis-sentinel/issues/23)).
+When using Sentinel in Master-Slave setup, if you want to set the passwords for Master and Slave nodes, consider having the **same** `REDIS_PASSWORD` and `REDIS_MASTER_PASSWORD` for them.
 
 ```yaml
 version: '2'
@@ -190,7 +187,7 @@ services:
 Launch the containers using:
 
 ```console
-$ docker-compose up --scale redis-sentinel=3 -d
+docker-compose up --scale redis-sentinel=3 -d
 ```
 
 ## Configuration
@@ -199,26 +196,26 @@ $ docker-compose up --scale redis-sentinel=3 -d
 
 The Redis(R) Sentinel instance can be customized by specifying environment variables on the first run. The following environment values are provided to customize Redis(R) Sentinel:
 
-- `REDIS_MASTER_HOST`: Host of the Redis(R) master to monitor. Default: **redis**.
-- `REDIS_MASTER_PORT_NUMBER`: Port of the Redis(R) master to monitor. Default: **6379**.
-- `REDIS_MASTER_SET`: Name of the set of Redis(R) instances to monitor. Default: **mymaster**.
-- `REDIS_MASTER_PASSWORD`: Password to authenticate with the master. No defaults. As an alternative, you can mount a file with the password and set the `REDIS_MASTER_PASSWORD_FILE` variable.
-- `REDIS_MASTER_USER`: Username to authenticate with when ACL is enabled for the master. No defaults. This is available only for Redis(R) 6 or higher. If not specified, Redis(R) Sentinel will try to authenticate with just the password (using `sentinel auth-pass <master-name> <password>`).
-- `REDIS_SENTINEL_PORT_NUMBER`: Redis(R) Sentinel port. Default: **26379**.
-- `REDIS_SENTINEL_QUORUM`: Number of Sentinels that need to agree about the fact the master is not reachable. Default: **2**.
-- `REDIS_SENTINEL_PASSWORD`: Password to authenticate with this sentinel and to authenticate to other sentinels. No defaults. Needs to be identical on all sentinels. As an alternative, you can mount a file with the password and set the `REDIS_SENTINEL_PASSWORD_FILE` variable.
-- `REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS`: Number of milliseconds before master is declared down. Default: **60000**.
-- `REDIS_SENTINEL_FAILOVER_TIMEOUT`: Specifies the failover timeout in milliseconds. Default: **180000**.
-- `REDIS_SENTINEL_RESOLVE_HOSTNAMES`: Enables sentinel hostnames support. This is available only for Redis(R) 6.2 or higher.  Default: **no**.
-- `REDIS_SENTINEL_TLS_ENABLED`: Whether to enable TLS for traffic or not. Default: **no**.
-- `REDIS_SENTINEL_TLS_PORT_NUMBER`: Port used for TLS secure traffic. Default: **26379**.
-- `REDIS_SENTINEL_TLS_CERT_FILE`: File containing the certificate file for the TLS traffic. No defaults.
-- `REDIS_SENTINEL_TLS_KEY_FILE`: File containing the key for certificate. No defaults.
-- `REDIS_SENTINEL_TLS_CA_FILE`: File containing the CA of the certificate. No defaults.
-- `REDIS_SENTINEL_TLS_DH_PARAMS_FILE`: File containing DH params (in order to support DH based ciphers). No defaults.
-- `REDIS_SENTINEL_TLS_AUTH_CLIENTS`: Whether to require clients to authenticate or not. Default: **yes**.
-- `REDIS_SENTINEL_ANNOUNCE_IP`: Use the specified IP address in the HELLO messages used to gossip its presence. Default: **auto-detected local address**.
-- `REDIS_SENTINEL_ANNOUNCE_PORT`: Use the specified port in the HELLO messages used to gossip its presence. Default: **port specified in `REDIS_SENTINEL_PORT_NUMBER`**.
+* `REDIS_MASTER_HOST`: Host of the Redis(R) master to monitor. Default: **redis**.
+* `REDIS_MASTER_PORT_NUMBER`: Port of the Redis(R) master to monitor. Default: **6379**.
+* `REDIS_MASTER_SET`: Name of the set of Redis(R) instances to monitor. Default: **mymaster**.
+* `REDIS_MASTER_PASSWORD`: Password to authenticate with the master. No defaults. As an alternative, you can mount a file with the password and set the `REDIS_MASTER_PASSWORD_FILE` variable.
+* `REDIS_MASTER_USER`: Username to authenticate with when ACL is enabled for the master. No defaults. This is available only for Redis(R) 6 or higher. If not specified, Redis(R) Sentinel will try to authenticate with just the password (using `sentinel auth-pass <master-name> <password>`).
+* `REDIS_SENTINEL_PORT_NUMBER`: Redis(R) Sentinel port. Default: **26379**.
+* `REDIS_SENTINEL_QUORUM`: Number of Sentinels that need to agree about the fact the master is not reachable. Default: **2**.
+* `REDIS_SENTINEL_PASSWORD`: Password to authenticate with this sentinel and to authenticate to other sentinels. No defaults. Needs to be identical on all sentinels. As an alternative, you can mount a file with the password and set the `REDIS_SENTINEL_PASSWORD_FILE` variable.
+* `REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS`: Number of milliseconds before master is declared down. Default: **60000**.
+* `REDIS_SENTINEL_FAILOVER_TIMEOUT`: Specifies the failover timeout in milliseconds. Default: **180000**.
+* `REDIS_SENTINEL_RESOLVE_HOSTNAMES`: Enables sentinel hostnames support. This is available only for Redis(R) 6.2 or higher.  Default: **no**.
+* `REDIS_SENTINEL_TLS_ENABLED`: Whether to enable TLS for traffic or not. Default: **no**.
+* `REDIS_SENTINEL_TLS_PORT_NUMBER`: Port used for TLS secure traffic. Default: **26379**.
+* `REDIS_SENTINEL_TLS_CERT_FILE`: File containing the certificate file for the TLS traffic. No defaults.
+* `REDIS_SENTINEL_TLS_KEY_FILE`: File containing the key for certificate. No defaults.
+* `REDIS_SENTINEL_TLS_CA_FILE`: File containing the CA of the certificate. No defaults.
+* `REDIS_SENTINEL_TLS_DH_PARAMS_FILE`: File containing DH params (in order to support DH based ciphers). No defaults.
+* `REDIS_SENTINEL_TLS_AUTH_CLIENTS`: Whether to require clients to authenticate or not. Default: **yes**.
+* `REDIS_SENTINEL_ANNOUNCE_IP`: Use the specified IP address in the HELLO messages used to gossip its presence. Default: **auto-detected local address**.
+* `REDIS_SENTINEL_ANNOUNCE_PORT`: Use the specified port in the HELLO messages used to gossip its presence. Default: **port specified in `REDIS_SENTINEL_PORT_NUMBER`**.
 
 ### Securing Redis(R) Sentinel traffic
 
@@ -258,6 +255,7 @@ When enabling TLS, conventional standard traffic is disabled by default. However
         ...
       ...
     ```
+
 Alternatively, you may also provide with this configuration in your [custom](https://github.com/bitnami/containers/blob/main/bitnami/redis-sentinel#configuration-file) configuration file.
 
 ### Configuration file
@@ -269,7 +267,7 @@ The image looks for configurations in `/bitnami/redis-sentinel/conf/`. You can m
 Run the Redis(R) Sentinel image, mounting a directory from your host.
 
 ```console
-$ docker run --name redis-sentinel \
+docker run --name redis-sentinel \
     -e REDIS_MASTER_HOST=redis \
     -v /path/to/redis-sentinel/persistence:/bitnami \
     bitnami/redis-sentinel:latest
@@ -291,7 +289,7 @@ services:
 Edit the configuration on your host using your favorite editor.
 
 ```console
-$ vi /path/to/redis-persistence/redis-sentinel/conf/redis.conf
+vi /path/to/redis-persistence/redis-sentinel/conf/redis.conf
 ```
 
 #### Step 3: Restart Redis(R)
@@ -299,13 +297,13 @@ $ vi /path/to/redis-persistence/redis-sentinel/conf/redis.conf
 After changing the configuration, restart your Redis(R) container for changes to take effect.
 
 ```console
-$ docker restart redis
+docker restart redis
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose restart redis
+docker-compose restart redis
 ```
 
 Refer to the [Redis(R) configuration](http://redis.io/topics/config) manual for the complete list of configuration options.
@@ -315,13 +313,13 @@ Refer to the [Redis(R) configuration](http://redis.io/topics/config) manual for 
 The Bitnami Redis(R) Sentinel Docker Image sends the container logs to the `stdout`. To view the logs:
 
 ```console
-$ docker logs redis
+docker logs redis
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose logs redis
+docker-compose logs redis
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -335,7 +333,7 @@ Bitnami provides up-to-date versions of Redis(R) Sentinel, including security pa
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/redis-sentinel:latest
+docker pull bitnami/redis-sentinel:latest
 ```
 
 or if you're using Docker Compose, update the value of the image property to
@@ -346,31 +344,31 @@ or if you're using Docker Compose, update the value of the image property to
 Stop the currently running container using the command
 
 ```console
-$ docker stop redis
+docker stop redis
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose stop redis
+docker-compose stop redis
 ```
 
 Next, take a snapshot of the persistent volume `/path/to/redis-persistence` using:
 
 ```console
-$ rsync -a /path/to/redis-persistence /path/to/redis-persistence.bkp.$(date +%Y%m%d-%H.%M.%S)
+rsync -a /path/to/redis-persistence /path/to/redis-persistence.bkp.$(date +%Y%m%d-%H.%M.%S)
 ```
 
 #### Step 3: Remove the currently running container
 
 ```console
-$ docker rm -v redis
+docker rm -v redis
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose rm -v redis
+docker-compose rm -v redis
 ```
 
 #### Step 4: Run the new image
@@ -378,41 +376,42 @@ $ docker-compose rm -v redis
 Re-create your container from the new image.
 
 ```console
-$ docker run --name redis bitnami/redis-sentinel:latest
+docker run --name redis bitnami/redis-sentinel:latest
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose up redis
+docker-compose up redis
 ```
 
 ## Notable Changes
 
 ### 4.0.14-debian-9-r201, 4.0.14-ol-7-r222, 5.0.5-debian-9-r169, 5.0.5-ol-7-r175
 
-- Decrease the size of the container. The configuration logic is now based on Bash scripts in the `rootfs/` folder.
+* Decrease the size of the container. The configuration logic is now based on Bash scripts in the `rootfs/` folder.
 
 ### 4.0.10-r25
 
-- The Redis(R) sentinel container has been migrated to a non-root container approach. Previously the container run as `root` user and the redis daemon was started as `redis` user. From now own, both the container and the redis daemon run as user `1001`. As a consequence, the configuration files are writable by the user running the redis process. You can revert this behavior by changing `USER 1001` to `USER root` in the Dockerfile.
+* The Redis(R) sentinel container has been migrated to a non-root container approach. Previously the container run as `root` user and the redis daemon was started as `redis` user. From now own, both the container and the redis daemon run as user `1001`. As a consequence, the configuration files are writable by the user running the redis process. You can revert this behavior by changing `USER 1001` to `USER root` in the Dockerfile.
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
 If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/issues/new/choose). For us to provide better support, be sure to fill the issue template.
 
 ## License
-Copyright &copy; 2022 Bitnami
+
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

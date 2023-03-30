@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC1090
 
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load Airflow environment variables
 . /opt/bitnami/scripts/airflow-env.sh

@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load libraries
 . /opt/bitnami/scripts/libopenresty.sh
@@ -33,7 +33,19 @@ openresty_patch_httpoxy_vulnerability() {
 . /opt/bitnami/scripts/openresty-env.sh
 
 # Ensure non-root user has write permissions on a set of directories
-for dir in "$OPENRESTY_VOLUME_DIR" "$OPENRESTY_CONF_DIR" "$OPENRESTY_SERVER_BLOCKS_DIR" "${OPENRESTY_CONF_DIR}/bitnami" "${OPENRESTY_CONF_DIR}/bitnami/certs" "$OPENRESTY_LOGS_DIR" "$OPENRESTY_TMP_DIR"; do
+declare -a writable_dirs=(
+    "$OPENRESTY_VOLUME_DIR"
+    "$OPENRESTY_CONF_DIR"
+    "$OPENRESTY_SERVER_BLOCKS_DIR"
+    "${OPENRESTY_CONF_DIR}/bitnami"
+    "${OPENRESTY_CONF_DIR}/bitnami/certs"
+    "$OPENRESTY_LOGS_DIR"
+    "$OPENRESTY_TMP_DIR"
+    "$OPENRESTY_SITE_DIR"
+    "$OPENRESTY_INITSCRIPTS_DIR"
+    "$OPM_BASE_DIR"
+)
+for dir in "${writable_dirs[@]}"; do
     ensure_dir_exists "$dir"
     chmod -R g+rwX "$dir"
 done

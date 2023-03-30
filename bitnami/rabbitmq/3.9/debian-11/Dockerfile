@@ -1,6 +1,18 @@
 FROM docker.io/bitnami/minideb:bullseye
+
+ARG TARGETARCH
+
+LABEL org.opencontainers.image.base.name="docker.io/bitnami/minideb:bullseye" \
+      org.opencontainers.image.created="2023-03-28T06:17:24Z" \
+      org.opencontainers.image.description="Application packaged by VMware, Inc" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.ref.name="3.9.29-debian-11-r4" \
+      org.opencontainers.image.title="rabbitmq" \
+      org.opencontainers.image.vendor="VMware, Inc." \
+      org.opencontainers.image.version="3.9.29"
+
 ENV HOME="/opt/bitnami/rabbitmq/.rabbitmq" \
-    OS_ARCH="amd64" \
+    OS_ARCH="${TARGETARCH:-amd64}" \
     OS_FLAVOUR="debian-11" \
     OS_NAME="linux" \
     PATH="/opt/bitnami/common/bin:/opt/bitnami/erlang/bin:/opt/bitnami/rabbitmq/sbin:$PATH"
@@ -8,12 +20,24 @@ ENV HOME="/opt/bitnami/rabbitmq/.rabbitmq" \
 COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
-RUN install_packages acl ca-certificates curl gzip libc6 libgcc-s1 libssl1.1 libstdc++6 libtinfo6 locales procps tar zlib1g
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.14.0-152" --checksum 0c751c7e2ec0bc900a19dbec0306d6294fe744ddfb0fa64197ba1a36040092f0
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "erlang" "24.3.4-151" --checksum ec5e4c0d95f7f7b5d1823448c150e467681f4155181a382b27a9bf4610c38518
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "rabbitmq" "3.9.21-155" --checksum 75ec7fbaec65f9d75686a6619e56c8fab426912b563eeed6d23975d0286ad43a
+RUN install_packages ca-certificates curl libgcc-s1 libssl1.1 libstdc++6 libtinfo6 locales procps zlib1g
+RUN mkdir -p /tmp/bitnami/pkg/cache/ && cd /tmp/bitnami/pkg/cache/ && \
+    COMPONENTS=( \
+      "gosu-1.16.0-3-linux-${OS_ARCH}-debian-11" \
+      "erlang-24.3.4-10-0-linux-${OS_ARCH}-debian-11" \
+      "rabbitmq-3.9.29-1-linux-${OS_ARCH}-debian-11" \
+    ) && \
+    for COMPONENT in "${COMPONENTS[@]}"; do \
+      if [ ! -f "${COMPONENT}.tar.gz" ]; then \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz" -O ; \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz.sha256" -O ; \
+      fi && \
+      sha256sum -c "${COMPONENT}.tar.gz.sha256" && \
+      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' && \
+      rm -rf "${COMPONENT}".tar.gz{,.sha256} ; \
+    done
 RUN apt-get update && apt-get upgrade -y && \
-    rm -r /var/lib/apt/lists /var/cache/apt/archives
+    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 RUN chmod g+rwX /opt/bitnami
 RUN localedef -c -f UTF-8 -i en_US en_US.UTF-8
 RUN update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
@@ -24,7 +48,7 @@ RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
 COPY rootfs /
 RUN /opt/bitnami/scripts/rabbitmq/postunpack.sh
 RUN /opt/bitnami/scripts/locales/add-extra-locales.sh
-ENV APP_VERSION="3.9.21" \
+ENV APP_VERSION="3.9.29" \
     BITNAMI_APP_NAME="rabbitmq" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en"

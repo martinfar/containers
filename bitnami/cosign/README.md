@@ -5,20 +5,19 @@
 > Cosign supports container signing, verification, and storage in an OCI registry. Written in Go, it aims to make signatures invisible infrastructure.
 
 [Overview of Cosign](https://github.com/sigstore/cosign)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run -it --name cosign bitnami/cosign
+docker run -it --name cosign bitnami/cosign
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/cosign/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/cosign/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 ## Why use Bitnami Images?
@@ -34,8 +33,7 @@ $ docker-compose up -d
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`1`, `1-debian-11`, `1.10.0`, `1.10.0-debian-11-r2`, `latest` (1/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/cosign/1/debian-11/      Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -44,21 +42,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami Cosign Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/cosign).
 
 ```console
-$ docker pull bitnami/cosign:latest
+docker pull bitnami/cosign:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/cosign/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/cosign:[TAG]
+docker pull bitnami/cosign:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Maintenance
@@ -70,7 +68,7 @@ Bitnami provides up-to-date versions of Cosign, including security patches, soon
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/cosign:latest
+docker pull bitnami/cosign:latest
 ```
 
 or if you're using Docker Compose, update the value of the image property to `bitnami/cosign:latest`.
@@ -78,13 +76,13 @@ or if you're using Docker Compose, update the value of the image property to `bi
 #### Step 2: Remove the currently running container
 
 ```console
-$ docker rm -v cosign
+docker rm -v cosign
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose rm -v cosign
+docker-compose rm -v cosign
 ```
 
 #### Step 3: Run the new image
@@ -92,13 +90,13 @@ $ docker-compose rm -v cosign
 Re-create your container from the new image.
 
 ```console
-$ docker run --name cosign bitnami/cosign:latest
+docker run --name cosign bitnami/cosign:latest
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose up cosign
+docker-compose up cosign
 ```
 
 ## Configuration
@@ -108,14 +106,14 @@ $ docker-compose up cosign
 To run commands inside this container you can use `docker run`, for example to execute `cosign --help` you can follow the example below:
 
 ```console
-$ docker run --rm --name cosign bitnami/cosign:latest --help
+docker run --rm --name cosign bitnami/cosign:latest --help
 ```
 
-Check the [official Cosign documentation](https://github.com/sigstore/cosigndocs/) for more information about how to use Cosign.
+Check the [official Cosign documentation](https://github.com/sigstore/cosign/tree/main/doc) for more information about how to use Cosign.
 
 ## Contributing
 
-We'd love for you to contribute to this Docker image. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this Docker image. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -123,13 +121,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

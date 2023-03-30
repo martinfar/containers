@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load libraries
 . /opt/bitnami/scripts/libjenkins.sh
@@ -25,8 +25,8 @@ if is_boolean_yes "$JENKINS_FORCE_HTTPS"; then
         "--httpPort=-1"
         "--httpsPort=${JENKINS_HTTPS_PORT_NUMBER:-"$JENKINS_DEFAULT_HTTPS_PORT_NUMBER"}"
         "--httpsListenAddress=${JENKINS_HTTPS_LISTEN_ADDRESS:-"$JENKINS_DEFAULT_HTTPS_LISTEN_ADDRESS"}"
-        "--httpsKeyStore=${JENKINS_HOME}/jenkins.jks"
-        "--httpsKeyStorePassword=$JENKINS_KEYSTORE_PASSWORD"
+        "--httpsKeyStore=${JENKINS_CERTS_DIR}/jenkins.jks"
+        "--httpsKeyStorePassword=${JENKINS_KEYSTORE_PASSWORD}"
     )
 else
     args+=(
@@ -34,8 +34,8 @@ else
         "--httpListenAddress=${JENKINS_HTTP_LISTEN_ADDRESS:-"$JENKINS_DEFAULT_HTTP_LISTEN_ADDRESS"}"
         "--httpsPort=${JENKINS_HTTPS_PORT_NUMBER:-"$JENKINS_DEFAULT_HTTPS_PORT_NUMBER"}"
         "--httpsListenAddress=${JENKINS_HTTPS_LISTEN_ADDRESS:-"$JENKINS_DEFAULT_HTTPS_LISTEN_ADDRESS"}"
-        "--httpsKeyStore=${JENKINS_HOME}/jenkins.jks"
-        "--httpsKeyStorePassword=$JENKINS_KEYSTORE_PASSWORD"
+        "--httpsKeyStore=${JENKINS_CERTS_DIR}/jenkins.jks"
+        "--httpsKeyStorePassword=${JENKINS_KEYSTORE_PASSWORD}"
     )
 fi
 args+=("$@")

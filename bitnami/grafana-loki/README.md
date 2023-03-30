@@ -2,16 +2,15 @@
 
 ## What is Grafana Loki?
 
-> Grafana Loki is a horizontally scalable, highly available, and multi-tenant log aggregation system. It provides real-time long tailing and full persistence to object storage. 
+> Grafana Loki is a horizontally scalable, highly available, and multi-tenant log aggregation system. It provides real-time long tailing and full persistence to object storage.
 
 [Overview of Grafana Loki](https://grafana.com/oss/loki/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run --name grafana-loki bitnami/grafana-loki:latest
+docker run --name grafana-loki bitnami/grafana-loki:latest
 ```
 
 ## Why use Bitnami Images?
@@ -27,8 +26,7 @@ $ docker run --name grafana-loki bitnami/grafana-loki:latest
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`2`, `2-debian-11`, `2.6.1`, `2.6.1-debian-11-r5`, `latest` (2/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/grafana-loki/2/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -37,21 +35,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami grafana-loki Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/grafana-loki).
 
 ```console
-$ docker pull bitnami/grafana-loki:latest
+docker pull bitnami/grafana-loki:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/grafana-loki/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/grafana-loki:[TAG]
+docker pull bitnami/grafana-loki:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Why use a non-root container?
@@ -65,13 +63,13 @@ Non-root container images add an extra layer of security and are generally recom
 To run commands inside this container you can use `docker run`, for example to execute `grafana-loki --version` you can follow the example below:
 
 ```console
-$ docker run --rm --name grafana-loki bitnami/grafana-loki:latest -- --version
+docker run --rm --name grafana-loki bitnami/grafana-loki:latest -- --version
 ```
 
 In order for the container to work, you need to mount your custom `loki.yaml` file in `/bitnami/grafana-loki/conf/`. The following example runs Grafana Loki with a custom configuration file:
 
 ```console
-$ docker run --rm --name grafana-loki -v /path/to/loki.yaml:/bitnami/grafana-loki/conf/loki.yaml bitnami/grafana-loki:latest
+docker run --rm --name grafana-loki -v /path/to/loki.yaml:/bitnami/grafana-loki/conf/loki.yaml bitnami/grafana-loki:latest
 ```
 
 Using docker-compose:
@@ -90,7 +88,7 @@ Check the [official Grafana Loki documentation](https://grafana.com/docs/loki/la
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -98,13 +96,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

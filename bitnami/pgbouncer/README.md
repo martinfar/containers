@@ -5,20 +5,19 @@
 > PgBouncer is a connection pooler for PostgreSQL. It reduces performance overhead by rotating client connections to PostgreSQL databases. It supports PostgreSQL databases located on different hosts.
 
 [Overview of PgBouncer](https://www.pgbouncer.org/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run --name pgbouncer bitnami/pgbouncer:latest
+docker run --name pgbouncer bitnami/pgbouncer:latest
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/pgbouncer/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/pgbouncer/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options in the [Configuration](#configuration) section for a more secure deployment.
@@ -40,8 +39,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`1`, `1-debian-11`, `1.17.0`, `1.17.0-debian-11-r22`, `latest` (1/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/pgbouncer/1/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -50,21 +48,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami pgbouncer Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/pgbouncer).
 
 ```console
-$ docker pull bitnami/pgbouncer:latest
+docker pull bitnami/pgbouncer:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/pgbouncer/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/pgbouncer:[TAG]
+docker pull bitnami/pgbouncer:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Configuration
@@ -81,57 +79,57 @@ The authentication mode can be set using the `PGBOUNCER_AUTH_TYPE` variable, whi
 
 The Bitnami PgBouncer container requires a running PostgreSQL installation to connect to. This is configured with the following environment variables.
 
-- `POSTGRESQL_USERNAME`: Backend PostgreSQL username. Default: **postgres**.
-- `POSTGRESQL_PASSWORD`: Backend PostgreSQL password. No defaults.
-- `POSTGRESQL_DATABASE`: Backend PostgreSQL Database name to connect to. Default: **postgres**.
-- `POSTGRESQL_HOST`: Backend PostgreSQL hostname. Default: **postgresql**.
-- `POSTGRESQL_PORT`: Backend PostgreSQL port. Default: **5432**.
-- `PGBOUNCER_SET_DATABASE_USER`: Whether to include the backend PostgreSQL username in the database string. Default **no**.
-- `PGBOUNCER_SET_DATABASE_PASSWORD`: Whether to include the backend PostgreSQL password in the database string. Default **no**.
-- `PGBOUNCER_CONNECT_QUERY`: Query which will be executed after a connection is established. No Defaults.
+* `POSTGRESQL_USERNAME`: Backend PostgreSQL username. Default: **postgres**.
+* `POSTGRESQL_PASSWORD`: Backend PostgreSQL password. No defaults.
+* `POSTGRESQL_DATABASE`: Backend PostgreSQL Database name to connect to. Default: **postgres**.
+* `POSTGRESQL_HOST`: Backend PostgreSQL hostname. Default: **postgresql**.
+* `POSTGRESQL_PORT`: Backend PostgreSQL port. Default: **5432**.
+* `PGBOUNCER_SET_DATABASE_USER`: Whether to include the backend PostgreSQL username in the database string. Default **no**.
+* `PGBOUNCER_SET_DATABASE_PASSWORD`: Whether to include the backend PostgreSQL password in the database string. Default **no**.
+* `PGBOUNCER_CONNECT_QUERY`: Query which will be executed after a connection is established. No Defaults.
 
 ### Port and address binding
 
 The listening port and listening address can be configured with the following environment variables:
 
-- `PGBOUNCER_PORT`: PgBouncer port. Default: **6432**.
-- `PGBOUNCER_BIND_ADDRESS`: PgBouncer bind address. Default: **0.0.0.0**.
+* `PGBOUNCER_PORT`: PgBouncer port. Default: **6432**.
+* `PGBOUNCER_BIND_ADDRESS`: PgBouncer bind address. Default: **0.0.0.0**.
 
 ### Extra arguments to PgBouncer startup
 
 In case you want to add extra flags to the PgBouncer command, use the `PGBOUNCER_EXTRA_FLAGS` variable. Example:
 
 ```console
-$ docker run --name pgbouncer \
+docker run --name pgbouncer \
   -e PGBOUNCER_EXTRA_FLAGS="--verbose" \
   bitnami/pgbouncer:latest
 ```
 
 ### Exposed database
 
-- `PGBOUNCER_DATABASE`: PgBouncer exposed database. Default: **postgres**.
+* `PGBOUNCER_DATABASE`: PgBouncer exposed database. Default: **postgres**.
 
 In case you'd like pgbouncer to expose your database with a different name, you can use the `PGBOUNCER_DATABASE` variable.
 To expose the same database name as the backend, set `PGBOUNCER_DATABASE="$POSTGRESQL_DATABASE"`.
 
 ### Other options
 
-- `PGBOUNCER_AUTH_USER`: PgBouncer will use this user to connect to the database and query the PostgreSQL backend for a user and password. No defaults.
-- `PGBOUNCER_AUTH_QUERY`: PgBouncer will use this query to connect to the database and query the PostgreSQL backend for a user and password. No defaults.
-- `PGBOUNCER_POOL_MODE` : PgBouncer pool mode. Allowed values: session, transaction and statement. Default: **session**.
-- `PGBOUNCER_INIT_SLEEP_TIME` : PgBouncer initialization sleep time. Default: **10**.
-- `PGBOUNCER_INIT_MAX_RETRIES` : PgBouncer initialization maximum retries. Default: **10**.
-- `PGBOUNCER_QUERY_WAIT_TIMEOUT` : PgBouncer maximum time queries are allowed to spend waiting for execution. Default: **120**.
-- `PGBOUNCER_MAX_CLIENT_CONN` : PgBouncer maximum number of client connections allowed. Default: **120**.
-- `PGBOUNCER_MAX_DB_CONNECTIONS` : PgBouncer maximum number of database connections allowed. Default: **0 (unlimited)**.
-- `PGBOUNCER_IDLE_TRANSACTION_TIMEOUT` : PgBouncer maximum time for a client to be in "idle in transaction" state. Default: **0.0**.
-- `PGBOUNCER_DEFAULT_POOL_SIZE` : PgBouncer maximum server connections to allow per user/database pair. Default: **20**.
-- `PGBOUNCER_MIN_POOL_SIZE` : PgBouncer has at least this amount of open connections. Default: **0 (disabled)**.
-- `PGBOUNCER_RESERVE_POOL_SIZE` : PgBouncer allows this amount of additional connections. Default: **0 (disabled)**.
-- `PGBOUNCER_IGNORE_STARTUP_PARAMETERS`: you can use this to set `ignore_startup_parameters` in the auto-generated `pgbouncer.ini`. This can be useful for solving certain connection issues. See https://www.pgbouncer.org/config.html for more details.
-- `PGBOUNCER_SERVER_IDLE_TIMEOUT`: PgBouncer maximum time in seconds a server connection can be idle. If 0 then the timeout is disabled. Default: **600**
-- `PGBOUNCER_SERVER_RESET_QUERY`: PgBouncer query sent to server on connection release before making it available to other clients. Default: **DISCARD ALL**
-- `PGBOUNCER_STATS_USERS`: PgBouncer comma-separated list of database users that are allowed to connect and run read-only queries. No defaults.
+* `PGBOUNCER_AUTH_USER`: PgBouncer will use this user to connect to the database and query the PostgreSQL backend for a user and password. No defaults.
+* `PGBOUNCER_AUTH_QUERY`: PgBouncer will use this query to connect to the database and query the PostgreSQL backend for a user and password. No defaults.
+* `PGBOUNCER_POOL_MODE` : PgBouncer pool mode. Allowed values: session, transaction and statement. Default: **session**.
+* `PGBOUNCER_INIT_SLEEP_TIME` : PgBouncer initialization sleep time. Default: **10**.
+* `PGBOUNCER_INIT_MAX_RETRIES` : PgBouncer initialization maximum retries. Default: **10**.
+* `PGBOUNCER_QUERY_WAIT_TIMEOUT` : PgBouncer maximum time queries are allowed to spend waiting for execution. Default: **120**.
+* `PGBOUNCER_MAX_CLIENT_CONN` : PgBouncer maximum number of client connections allowed. Default: **120**.
+* `PGBOUNCER_MAX_DB_CONNECTIONS` : PgBouncer maximum number of database connections allowed. Default: **0 (unlimited)**.
+* `PGBOUNCER_IDLE_TRANSACTION_TIMEOUT` : PgBouncer maximum time for a client to be in "idle in transaction" state. Default: **0.0**.
+* `PGBOUNCER_DEFAULT_POOL_SIZE` : PgBouncer maximum server connections to allow per user/database pair. Default: **20**.
+* `PGBOUNCER_MIN_POOL_SIZE` : PgBouncer has at least this amount of open connections. Default: **0 (disabled)**.
+* `PGBOUNCER_RESERVE_POOL_SIZE` : PgBouncer allows this amount of additional connections. Default: **0 (disabled)**.
+* `PGBOUNCER_IGNORE_STARTUP_PARAMETERS`: you can use this to set `ignore_startup_parameters` in the auto-generated `pgbouncer.ini`. This can be useful for solving certain connection issues. See <https://www.pgbouncer.org/> config.html for more details.
+* `PGBOUNCER_SERVER_IDLE_TIMEOUT`: PgBouncer maximum time in seconds a server connection can be idle. If 0 then the timeout is disabled. Default: **600**
+* `PGBOUNCER_SERVER_RESET_QUERY`: PgBouncer query sent to server on connection release before making it available to other clients. Default: **DISCARD ALL**
+* `PGBOUNCER_STATS_USERS`: PgBouncer comma-separated list of database users that are allowed to connect and run read-only queries. No defaults.
 
 ### Initializing a new instance
 
@@ -140,7 +138,7 @@ When the container is launched, it will execute the files with extension `.sh` l
 In order to have your custom files inside the docker image you can mount them as a volume.
 
 ```console
-$ docker run --name pgbouncer \
+docker run --name pgbouncer \
   -v /path/to/init-scripts:/docker-entrypoint-initdb.d \
   bitnami/pgbouncer:latest
 ```
@@ -158,18 +156,18 @@ pgbouncer:
 
 PgBouncer supports the encryption of connections using the SSL/TLS protocol. Should you desire to enable this optional feature, you may use the following environment variables to configure the application:
 
- - `PGBOUNCER_CLIENT_TLS_SSLMODE`: TLS traffic settings. Defaults to `disable`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `client_tls_sslmode`.
- - `PGBOUNCER_CLIENT_TLS_CERT_FILE`: File containing the certificate file for the TLS traffic. No defaults.
- - `PGBOUNCER_CLIENT_TLS_KEY_FILE`: File containing the key for certificate. No defaults.
- - `PGBOUNCER_CLIENT_TLS_CA_FILE`: File containing the CA of the certificate. If provided, PgBouncer will authenticate TLS/SSL clients by requesting them a certificate . No defaults.
- - `PGBOUNCER_CLIENT_TLS_CIPHERS`: TLS ciphers to be used. Defaults to `fast`.Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `client_tls_ciphers`.
+* `PGBOUNCER_CLIENT_TLS_SSLMODE`: TLS traffic settings. Defaults to `disable`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `client_tls_sslmode`.
+* `PGBOUNCER_CLIENT_TLS_CERT_FILE`: File containing the certificate file for the TLS traffic. No defaults.
+* `PGBOUNCER_CLIENT_TLS_KEY_FILE`: File containing the key for certificate. No defaults.
+* `PGBOUNCER_CLIENT_TLS_CA_FILE`: File containing the CA of the certificate. If provided, PgBouncer will authenticate TLS/SSL clients by requesting them a certificate . No defaults.
+* `PGBOUNCER_CLIENT_TLS_CIPHERS`: TLS ciphers to be used. Defaults to `fast`.Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `client_tls_ciphers`.
 
- - `PGBOUNCER_SERVER_TLS_SSLMODE`: Server TLS traffic settings. Defaults to `disable`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `server_tls_sslmode`.
- - `PGBOUNCER_SERVER_TLS_KEY_FILE`: File containing the key to authenticate against PostgreSQL server. No defaults.
- - `PGBOUNCER_SERVER_TLS_CERT_FILE`: File containing the certificate associated to previous private key. PostgreSQL server can validate it. No defaults.
- - `PGBOUNCER_SERVER_TLS_CA_FILE`: File containing the CA of the server certificate. If provided, PgBouncer will authenticate TLS/SSL clients by requesting them a certificate . No defaults.
- - `PGBOUNCER_SERVER_TLS_PROTOCOLS`: TLS protocols to be used in server connection. Defaults to `secure`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `server_tls_protocols`.
- - `PGBOUNCER_SERVER_TLS_CIPHERS`: TLS ciphers to be used in server connection. Defaults to `fast`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `server_tls_ciphers`.
+* `PGBOUNCER_SERVER_TLS_SSLMODE`: Server TLS traffic settings. Defaults to `disable`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `server_tls_sslmode`.
+* `PGBOUNCER_SERVER_TLS_KEY_FILE`: File containing the key to authenticate against PostgreSQL server. No defaults.
+* `PGBOUNCER_SERVER_TLS_CERT_FILE`: File containing the certificate associated to previous private key. PostgreSQL server can validate it. No defaults.
+* `PGBOUNCER_SERVER_TLS_CA_FILE`: File containing the CA of the server certificate. If provided, PgBouncer will authenticate TLS/SSL clients by requesting them a certificate . No defaults.
+* `PGBOUNCER_SERVER_TLS_PROTOCOLS`: TLS protocols to be used in server connection. Defaults to `secure`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `server_tls_protocols`.
+* `PGBOUNCER_SERVER_TLS_CIPHERS`: TLS ciphers to be used in server connection. Defaults to `fast`. Check the [official PgBouncer documentation](https://www.pgbouncer.org/config.html) for the available values for `server_tls_ciphers`.
 
 When enabling TLS, PgBouncer will support both standard and encrypted traffic by default but prefer the latter. Below there are some examples of how to quickly set up client TLS traffic:
 
@@ -216,6 +214,7 @@ The image looks for `pgbouncer.ini` file in `/opt/bitnami/pgbouncer/conf/`. You 
 ```
 
 As PgBouncer image is non-root, you need to set the proper permissions to the mounted directory in your host:
+
 ```console
 sudo chown 1001:1001 /path/to/pgbouncer-persistence/conf/
 ```
@@ -225,7 +224,7 @@ sudo chown 1001:1001 /path/to/pgbouncer-persistence/conf/
 Run the PgBouncer image, mounting a directory from your host.
 
 ```console
-$ docker run --name pgbouncer \
+docker run --name pgbouncer \
     -v /path/to/pgbouncer-persistence/conf/:/bitnami/pgbouncer/conf/ \
     bitnami/pgbouncer:latest
 ```
@@ -259,20 +258,20 @@ vi /path/to/pgbouncer-persistence/conf/pgbouncer.ini
 After changing the configuration, restart your PgBouncer container for changes to take effect.
 
 ```console
-$ docker restart pgbouncer
+docker restart pgbouncer
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose restart pgbouncer
+docker-compose restart pgbouncer
 ```
 
 Refer to the [server configuration](https://www.pgbouncer.org/usage.html) manual for the complete list of configuration options.
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -280,13 +279,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

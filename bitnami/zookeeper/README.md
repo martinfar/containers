@@ -5,13 +5,12 @@
 > Apache ZooKeeper provides a reliable, centralized register of configuration data and services for distributed applications.
 
 [Overview of Apache ZooKeeper](https://zookeeper.apache.org)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run --name zookeeper bitnami/zookeeper:latest
+docker run --name zookeeper bitnami/zookeeper:latest
 ```
 
 ### Docker Compose
@@ -49,10 +48,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`3.8`, `3.8-debian-11`, `3.8.0`, `3.8.0-debian-11-r22`, `latest` (3.8/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/zookeeper/3.8/debian-11/Dockerfile)
-* [`3.7`, `3.7-debian-11`, `3.7.1`, `3.7.1-debian-11-r26` (3.7/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/zookeeper/3.7/debian-11/Dockerfile)
-* [`3.6`, `3.6-debian-11`, `3.6.3`, `3.6.3-debian-11-r26` (3.6/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/zookeeper/3.6/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -61,21 +57,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami Apache ZooKeeper Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/zookeeper).
 
 ```console
-$ docker pull bitnami/zookeeper:latest
+docker pull bitnami/zookeeper:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/zookeeper/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/zookeeper:[TAG]
+docker pull bitnami/zookeeper:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Persisting your data
@@ -89,7 +85,7 @@ If you have already started using Apache ZooKeeper, follow the steps on
 The image exposes a volume at `/bitnami/zookeeper` for the Apache ZooKeeper data. For persistence you can mount a directory at this location from your host. If the mounted directory is empty, it will be initialized on the first run.
 
 ```console
-$ docker run -v /path/to/zookeeper-persistence:/bitnami/zookeeper bitnami/zookeeper:latest
+docker run -v /path/to/zookeeper-persistence:/bitnami/zookeeper bitnami/zookeeper:latest
 ```
 
 or by modifying the [`docker-compose.yml`](https://github.com/bitnami/containers/blob/main/bitnami/zookeeper/docker-compose.yml) file present in this repository:
@@ -107,18 +103,18 @@ services:
 
 ## Connecting to other containers
 
-Using [Docker container networking](https://docs.docker.com/engine/userguide/networking/), a Apache ZooKeeper server running inside a container can easily be accessed by your application containers.
+Using [Docker container networking](https://docs.docker.com/engine/userguide/networking/), an Apache ZooKeeper server running inside a container can easily be accessed by your application containers.
 
 Containers attached to the same network can communicate with each other using the container name as the hostname.
 
 ### Using the Command Line
 
-In this example, we will create a Apache ZooKeeper client instance that will connect to the server instance that is running on the same docker network as the client.
+In this example, we will create an Apache ZooKeeper client instance that will connect to the server instance that is running on the same docker network as the client.
 
 #### Step 1: Create a network
 
 ```console
-$ docker network create app-tier --driver bridge
+docker network create app-tier --driver bridge
 ```
 
 #### Step 2: Launch the Apache ZooKeeper server instance
@@ -126,7 +122,7 @@ $ docker network create app-tier --driver bridge
 Use the `--network app-tier` argument to the `docker run` command to attach the Apache ZooKeeper container to the `app-tier` network.
 
 ```console
-$ docker run -d --name zookeeper-server \
+docker run -d --name zookeeper-server \
     --network app-tier \
     bitnami/zookeeper:latest
 ```
@@ -136,12 +132,12 @@ $ docker run -d --name zookeeper-server \
 Finally we create a new container instance to launch the Apache ZooKeeper client and connect to the server created in the previous step:
 
 ```console
-$ docker run -it --rm \
+docker run -it --rm \
     --network app-tier \
     bitnami/zookeeper:latest zkCli.sh -server zookeeper-server:2181  get /
 ```
 
-### Using Docker Compose
+### Using a Docker Compose file
 
 When not specified, Docker Compose automatically sets up a new network and attaches all deployed services to that network. However, we will explicitly define a new `bridge` network named `app-tier`. In this example we assume that you want to connect to the Apache ZooKeeper server from your own custom application image which is identified in the following snippet by the service name `myapp`.
 
@@ -171,60 +167,61 @@ services:
 Launch the containers using:
 
 ```console
-$ docker-compose up -d
+docker-compose up -d
 ```
 
 ## Configuration
 
 The configuration can easily be setup with the Bitnami Apache ZooKeeper Docker image using the following environment variables:
 
- - `ZOO_PORT_NUMBER`: Apache ZooKeeper client port. Default: **2181**
- - `ZOO_SERVER_ID`: ID of the server in the ensemble. Default: **1**
- - `ZOO_TICK_TIME`: Basic time unit in milliseconds used by Apache ZooKeeper for heartbeats. Default: **2000**
- - `ZOO_PRE_ALLOC_SIZE`': Block size for transaction log file. Default **65536**
- - `ZOO_SNAPCOUNT`: The number of transactions recorded in the transaction log before a snapshot can be taken (and the transaction log rolled). Default **100000**
- - `ZOO_INIT_LIMIT`: Apache ZooKeeper uses to limit the length of time the Apache ZooKeeper servers in quorum have to connect to a leader. Default: **10**
- - `ZOO_SYNC_LIMIT`: How far out of date a server can be from a leader. Default: **5**
- - `ZOO_MAX_CNXNS`: Limits the total number of concurrent connections that can be made to a Apache ZooKeeper server. Setting it to 0 entirely removes the limit. Default: **0**
- - `ZOO_MAX_CLIENT_CNXNS`: Limits the number of concurrent connections that a single client may make to a single member of the Apache ZooKeeper ensemble. Default **60**
- - `ZOO_4LW_COMMANDS_WHITELIST`: List of whitelisted [4LW](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_4lw) commands. Default **srvr, mntr**
- - `ZOO_SERVERS`: Comma, space or semi-colon separated list of servers. Example: zoo1:2888:3888,zoo2:2888:3888 or if specifying server IDs zoo1:2888:3888::1,zoo2:2888:3888::2. No defaults.
- - `ZOO_CLIENT_USER`: User that will use Apache ZooKeeper clients to auth. Default: No defaults.
- - `ZOO_CLIENT_PASSWORD`: Password that will use Apache ZooKeeper clients to auth. No defaults.
- - `ZOO_CLIENT_PASSWORD_FILE`: Absolute path to a file that contains the password that will be used by Apache ZooKeeper clients to perform authentication. No defaults.
- - `ZOO_SERVER_USERS`: Comma, semicolon or whitespace separated  list of user to be created.  Example: user1,user2,admin. No defaults
- - `ZOO_SERVER_PASSWORDS`: Comma, semicolon or whitespace separated list of passwords to assign to users when created. Example: pass4user1, pass4user2, pass4admin. No defaults
- - `ZOO_SERVER_PASSWORDS_FILE`: Absolute path to a file that contains a comma, semicolon or whitespace separated list of passwords to assign to users when created. Example: pass4user1, pass4user2, pass4admin. No defaults
- - `ZOO_ENABLE_AUTH`: Enable Apache ZooKeeper auth. It uses SASL/Digest-MD5. Default: **no**
- - `ZOO_RECONFIG_ENABLED`: Enable Apache ZooKeeper Dynamic Reconfiguration. Default: **no**
- - `ZOO_LISTEN_ALLIPS_ENABLED`: Listen for connections from its peers on all available IP addresses. Default: **no**
- - `ZOO_AUTOPURGE_INTERVAL`: The time interval in hours for which the autopurge task is triggered. Set to a positive integer (1 and above) to enable auto purging of old snapshots and log files. Default: **0**
- - `ZOO_MAX_SESSION_TIMEOUT`: Maximum session timeout in milliseconds that the server will allow the client to negotiate. Default: **40000**
- - `ZOO_AUTOPURGE_RETAIN_COUNT`: When auto purging is enabled, Apache ZooKeeper retains the most recent snapshots and the corresponding transaction logs in the dataDir and dataLogDir respectively to this number and deletes the rest. Minimum value is 3. Default: **3**
- - `ZOO_HEAP_SIZE`: Size in MB for the Java Heap options (Xmx and XMs). This env var is ignored if Xmx an Xms are configured via `JVMFLAGS`. Default: **1024**
- - `ZOO_ENABLE_PROMETHEUS_METRICS`: Expose Prometheus metrics. Default: **no**
- - `ZOO_PROMETHEUS_METRICS_PORT_NUMBER`: Port where a Jetty server will expose Prometheus metrics. Default: **7000**
- - `ALLOW_ANONYMOUS_LOGIN`: If set to true, Allow to accept connections from unauthenticated users. Default: **no**
- - `ZOO_LOG_LEVEL`: Apache ZooKeeper log level. Available levels are: `ALL`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`, `OFF`, `TRACE`. Default: **INFO**
- - `JVMFLAGS`: Default JVMFLAGS for the Apache ZooKeeper process. No defaults
- - `ZOO_TLS_CLIENT_ENABLE`: Enable tls for client communication. Default: **false**
- - `ZOO_TLS_PORT_NUMBER`: Zookeeper TLS port. Default: 3181
- - `ZOO_TLS_CLIENT_KEYSTORE_FILE`: KeyStore file: Default: No Defaults
- - `ZOO_TLS_CLIENT_KEYSTORE_PASSWORD`: KeyStore file password. This can be an environment variable. It will be evaluated by bash. No Defaults
- - `ZOO_TLS_CLIENT_TRUSTSTORE_FILE`: TrustStore file: Default: No Defaults
- - `ZOO_TLS_CLIENT_TRUSTSTORE_PASSWORD`: TrustStore file password. This can be an environment variable. It will be evaluated by bash. No Defaults
- - `ZOO_TLS_CLIENT_AUTH`: Specifies options to authenticate TLS connections from clients. Available values are: `none`, `want`, `need`. Default: **need**
- - `ZOO_TLS_QUORUM_ENABLE`: Enable tls for quorum communication. Default: **false**
- - `ZOO_TLS_QUORUM_KEYSTORE_FILE`: KeyStore file: Default: No Defaults
- - `ZOO_TLS_QUORUM_KEYSTORE_PASSWORD`: KeyStore file password. This can be an environment variable. It will be evaluated by bash. No Defaults
- - `ZOO_TLS_QUORUM_TRUSTSTORE_FILE`: TrustStore file: Default: No Defaults
- - `ZOO_TLS_QUORUM_TRUSTSTORE_PASSWORD`: TrustStore file password. This can be an environment variable. It will be evaluated by bash. No Defaults
- - `ZOO_TLS_QUORUM_CLIENT_AUTH`: Specifies options to authenticate TLS connections from clients. Available values are: `none`, `want`, `need`. Default: **need**
- - `ZOO_ENABLE_ADMIN_SERVER`: Enable [admin server](https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html#sc_adminserver). Default: **yes**
- - `ZOO_ADMIN_SERVER_PORT_NUMBER`: [Admin server](https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html#sc_adminserver) port. Default: **8080**
+* `ZOO_PORT_NUMBER`: Apache ZooKeeper client port. Default: **2181**
+* `ZOO_SERVER_ID`: ID of the server in the ensemble. Default: **1**
+* `ZOO_TICK_TIME`: Basic time unit in milliseconds used by Apache ZooKeeper for heartbeats. Default: **2000**
+* `ZOO_PRE_ALLOC_SIZE`': Block size for transaction log file. Default: **65536**
+* `ZOO_SNAPCOUNT`: The number of transactions recorded in the transaction log before a snapshot can be taken (and the transaction log rolled). Default: **100000**
+* `ZOO_INIT_LIMIT`: Apache ZooKeeper uses to limit the length of time the Apache ZooKeeper servers in quorum have to connect to a leader. Default: **10**
+* `ZOO_SYNC_LIMIT`: How far out of date a server can be from a leader. Default: **5**
+* `ZOO_MAX_CNXNS`: Limits the total number of concurrent connections that can be made to an Apache ZooKeeper server. Setting it to 0 entirely removes the limit. Default: **0**
+* `ZOO_MAX_CLIENT_CNXNS`: Limits the number of concurrent connections that a single client may make to a single member of the Apache ZooKeeper ensemble. Default: **60**
+* `ZOO_4LW_COMMANDS_WHITELIST`: List of whitelisted [4LW](https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_4lw) commands. Default: **srvr, mntr**
+* `ZOO_SERVERS`: Comma, space or semi-colon separated list of servers. Example: zoo1:2888:3888,zoo2:2888:3888 or if specifying server IDs zoo1:2888:3888::1,zoo2:2888:3888::2. Default: No defaults.
+* `ZOO_CLIENT_USER`: User that will use Apache ZooKeeper clients to auth. Default: No defaults.
+* `ZOO_CLIENT_PASSWORD`: Password that will use Apache ZooKeeper clients to auth. Default: No defaults.
+* `ZOO_CLIENT_PASSWORD_FILE`: Absolute path to a file that contains the password that will be used by Apache ZooKeeper clients to perform authentication. Default: No defaults.
+* `ZOO_SERVER_USERS`: Comma, semicolon or whitespace separated  list of user to be created.  Example: user1,user2,admin. Default: No defaults
+* `ZOO_SERVER_PASSWORDS`: Comma, semicolon or whitespace separated list of passwords to assign to users when created. Example: pass4user1, pass4user2, pass4admin. Default: No defaults
+* `ZOO_SERVER_PASSWORDS_FILE`: Absolute path to a file that contains a comma, semicolon or whitespace separated list of passwords to assign to users when created. Example: pass4user1, pass4user2, pass4admin. Default: No defaults
+* `ZOO_ENABLE_AUTH`: Enable Apache ZooKeeper auth. It uses SASL/Digest-MD5. Default: **no**
+* `ZOO_RECONFIG_ENABLED`: Enable Apache ZooKeeper Dynamic Reconfiguration. Default: **no**
+* `ZOO_LISTEN_ALLIPS_ENABLED`: Listen for connections from its peers on all available IP addresses. Default: **no**
+* `ZOO_AUTOPURGE_INTERVAL`: The time interval in hours for which the autopurge task is triggered. Set to a positive integer (1 and above) to enable auto purging of old snapshots and log files. Default: **0**
+* `ZOO_MAX_SESSION_TIMEOUT`: Maximum session timeout in milliseconds that the server will allow the client to negotiate. Default: **40000**
+* `ZOO_AUTOPURGE_RETAIN_COUNT`: When auto purging is enabled, Apache ZooKeeper retains the most recent snapshots and the corresponding transaction logs in the dataDir and dataLogDir respectively to this number and deletes the rest. Minimum value is 3. Default: **3**
+* `ZOO_HEAP_SIZE`: Size in MB for the Java Heap options (Xmx and XMs). This env var is ignored if Xmx an Xms are configured via `JVMFLAGS`. Default: **1024**
+* `ZOO_ENABLE_PROMETHEUS_METRICS`: Expose Prometheus metrics. Default: **no**
+* `ZOO_PROMETHEUS_METRICS_PORT_NUMBER`: Port where a Jetty server will expose Prometheus metrics. Default: **7000**
+* `ALLOW_ANONYMOUS_LOGIN`: If set to true, Allow to accept connections from unauthenticated users. Default: **no**
+* `ZOO_LOG_LEVEL`: Apache ZooKeeper log level. Available levels are: `ALL`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`, `OFF`, `TRACE`. Default: **INFO**
+* `JVMFLAGS`: Default JVMFLAGS for the Apache ZooKeeper process. Default: No defaults
+* `ZOO_TLS_CLIENT_ENABLE`: Enable tls for client communication. Default: **false**
+* `ZOO_TLS_PORT_NUMBER`: Zookeeper TLS port. Default: 3181
+* `ZOO_TLS_CLIENT_KEYSTORE_FILE`: KeyStore file: Default: No Defaults
+* `ZOO_TLS_CLIENT_KEYSTORE_PASSWORD`: KeyStore file password. This can be an environment variable. It will be evaluated by bash. Default: No Defaults
+* `ZOO_TLS_CLIENT_TRUSTSTORE_FILE`: TrustStore file: Default: No Defaults
+* `ZOO_TLS_CLIENT_TRUSTSTORE_PASSWORD`: TrustStore file password. This can be an environment variable. It will be evaluated by bash. Default: No Defaults
+* `ZOO_TLS_CLIENT_AUTH`: Specifies options to authenticate TLS connections from clients. Available values are: `none`, `want`, `need`. Default: **need**
+* `ZOO_TLS_QUORUM_ENABLE`: Enable tls for quorum communication. Default: **false**
+* `ZOO_TLS_QUORUM_KEYSTORE_FILE`: KeyStore file: Default: No Defaults
+* `ZOO_TLS_QUORUM_KEYSTORE_PASSWORD`: KeyStore file password. This can be an environment variable. It will be evaluated by bash. Default: No Defaults
+* `ZOO_TLS_QUORUM_TRUSTSTORE_FILE`: TrustStore file: Default: No Defaults
+* `ZOO_TLS_QUORUM_TRUSTSTORE_PASSWORD`: TrustStore file password. This can be an environment variable. It will be evaluated by bash. Default: No Defaults
+* `ZOO_TLS_QUORUM_CLIENT_AUTH`: Specifies options to authenticate TLS connections from clients. Available values are: `none`, `want`, `need`. Default: **need**
+* `ZOO_ENABLE_ADMIN_SERVER`: Enable [admin server](https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html#sc_adminserver). Default: **yes**
+* `ZOO_ADMIN_SERVER_PORT_NUMBER`: [Admin server](https://zookeeper.apache.org/doc/r3.5.7/zookeeperAdmin.html#sc_adminserver) port. Default: **8080**
+* `ZOO_PEER_TYPE`: Zookeeper Node [Peer type](https://zookeeper.apache.org/doc/r3.6.3/zookeeperObservers.html). Default: No Defaults
 
 ```console
-$ docker run --name zookeeper -e ZOO_SERVER_ID=1 bitnami/zookeeper:latest
+docker run --name zookeeper -e ZOO_SERVER_ID=1 bitnami/zookeeper:latest
 ```
 
 or modify the [`docker-compose.yml`](https://github.com/bitnami/containers/blob/main/bitnami/zookeeper/docker-compose.yml) file present in this repository:
@@ -238,11 +235,12 @@ services:
   ...
 ```
 
-### Configuration
+### Apache ZooKeeper Configuration
+
 The image looks for configuration in the `conf/` directory of `/opt/bitnami/zookeeper`.
 
 ```console
-$ docker run --name zookeeper -v /path/to/zoo.cfg:/opt/bitnami/zookeeper/conf/zoo.cfg  bitnami/zookeeper:latest
+docker run --name zookeeper -v /path/to/zoo.cfg:/opt/bitnami/zookeeper/conf/zoo.cfg  bitnami/zookeeper:latest
 ```
 
 After that, your changes will be taken into account in the server's behaviour.
@@ -252,7 +250,7 @@ After that, your changes will be taken into account in the server's behaviour.
 Run the Apache ZooKeeper image, mounting a directory from your host.
 
 ```console
-$ docker run --name zookeeper -v /path/to/zoo.cfg:/opt/bitnami/zookeeper/conf/zoo.cfg bitnami/zookeeper:latest
+docker run --name zookeeper -v /path/to/zoo.cfg:/opt/bitnami/zookeeper/conf/zoo.cfg bitnami/zookeeper:latest
 ```
 
 or using Docker Compose:
@@ -282,13 +280,13 @@ vi /path/to/zoo.cfg
 After changing the configuration, restart your Apache ZooKeeper container for changes to take effect.
 
 ```console
-$ docker restart zookeeper
+docker restart zookeeper
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose restart zookeeper
+docker-compose restart zookeeper
 ```
 
 ### Security
@@ -301,7 +299,7 @@ be able to login.
 `ZOO_CLIENT_USER` and `ZOO_CLIENT_PASSWORD` environment variables too.
 
 ```console
-$ docker run -it -e ZOO_ENABLE_AUTH=yes \
+docker run -it -e ZOO_ENABLE_AUTH=yes \
                -e ZOO_SERVER_USERS=user1,user2 \
                -e ZOO_SERVER_PASSWORDS=pass4user1,pass4user2 \
                -e ZOO_CLIENT_USER=user1 \
@@ -324,13 +322,15 @@ services:
   ...
 ```
 
-### Setting up a Apache ZooKeeper ensemble
+### Setting up an Apache ZooKeeper ensemble
 
-A Apache ZooKeeper (https://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html) cluster can easily be setup with the Bitnami Apache ZooKeeper Docker image using the following environment variables:
+An Apache ZooKeeper (<https://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html>) cluster can easily be setup with the Bitnami Apache ZooKeeper Docker image using the following environment variables:
 
- - `ZOO_SERVERS`: Comma, space or semi-colon separated list of servers.This can be done with or without specifying the ID of the server in the ensemble. No defaults. Examples:
-  - without Server ID - zoo1:2888:3888,zoo2:2888:3888
-  - with Server ID - zoo1:2888:3888::1,zoo2:2888:3888::2
+* `ZOO_SERVERS`: Comma, space or semi-colon separated list of servers. This can be done with or without specifying the ID of the server in the ensemble. No defaults. Examples:
+* without Server ID - zoo1:2888:3888,zoo2:2888:3888
+* with Server ID - zoo1:2888:3888::1,zoo2:2888:3888::2
+* without Server ID and Observers - zoo1:2888:3888,zoo2:2888:3888:observer
+* with Server ID and Observers - zoo1:2888:3888::1,zoo2:2888:3888:observer::2
 
 For reliable Apache ZooKeeper service, you should deploy Apache ZooKeeper in a cluster known as an ensemble. As long as a majority of the ensemble are up, the service will be available. Because Apache ZooKeeper requires a majority, it is best to use an odd number of machines. For example, with four machines Apache ZooKeeper can only handle the failure of a single machine; if two machines fail, the remaining two machines do not constitute a majority. However, with five machines Apache ZooKeeper can handle the failure of two machines.
 
@@ -341,15 +341,15 @@ See below:
 Create a Docker network to enable visibility to each other via the docker container name
 
 ```console
-$ docker network create app-tier --driver bridge
+docker network create app-tier --driver bridge
 ```
 
 #### Step 1: Create the first node
 
-The first step is to create one  Apache ZooKeeper instance.
+The first step is to create one Apache ZooKeeper instance.
 
 ```console
-$ docker run --name zookeeper1 \
+docker run --name zookeeper1 \
   --network app-tier \
   -e ZOO_SERVER_ID=1 \
   -e ZOO_SERVERS=0.0.0.0:2888:3888,zookeeper2:2888:3888,zookeeper3:2888:3888 \
@@ -364,7 +364,7 @@ $ docker run --name zookeeper1 \
 Next we start a new Apache ZooKeeper container.
 
 ```console
-$ docker run --name zookeeper2 \
+docker run --name zookeeper2 \
   --network app-tier \
   -e ZOO_SERVER_ID=2 \
   -e ZOO_SERVERS=zookeeper1:2888:3888,0.0.0.0:2888:3888,zookeeper3:2888:3888 \
@@ -379,7 +379,7 @@ $ docker run --name zookeeper2 \
 Next we start another new Apache ZooKeeper container.
 
 ```console
-$ docker run --name zookeeper3 \
+docker run --name zookeeper3 \
   --network app-tier \
   -e ZOO_SERVER_ID=3 \
   -e ZOO_SERVERS=zookeeper1:2888:3888,zookeeper2:2888:3888,0.0.0.0:2888:3888 \
@@ -388,6 +388,7 @@ $ docker run --name zookeeper3 \
   -p 3888:3888 \
   bitnami/zookeeper:latest
 ```
+
 You now have a two node Apache ZooKeeper cluster up and running. You can scale the cluster by adding/removing slaves without incurring any downtime.
 
 With Docker Compose the ensemble can be setup using:
@@ -431,9 +432,9 @@ services:
       - ZOO_SERVERS=zookeeper1:2888:3888,zookeeper2:2888:3888,0.0.0.0:2888:3888
 ```
 
-### Start Zookeeper with TLS
+### Start Apache ZooKeeper with TLS
 
-```
+```console
 docker run --name zookeeper \
   -v /path/to/domain.key:/bitnami/zookeeper/certs/domain.key:ro
   -v /path/to/domain.crs:/bitnami/zookeeper/certs/domain.crs:ro
@@ -449,13 +450,13 @@ docker run --name zookeeper \
 The Bitnami Apache ZooKeeper Docker image sends the container logs to the `stdout`. To view the logs:
 
 ```console
-$ docker logs zookeeper
+docker logs zookeeper
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose logs zookeeper
+docker-compose logs zookeeper
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -469,13 +470,13 @@ To backup your data, follow these simple steps:
 #### Step 1: Stop the currently running container
 
 ```console
-$ docker stop zookeeper
+docker stop zookeeper
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose stop zookeeper
+docker-compose stop zookeeper
 ```
 
 #### Step 2: Run the backup command
@@ -483,15 +484,15 @@ $ docker-compose stop zookeeper
 We need to mount two volumes in a container we will use to create the backup: a directory on your host to store the backup in, and the volumes from the container we just stopped so we can access the data.
 
 ```console
-$ docker run --rm -v /path/to/zookeeper-backups:/backups --volumes-from zookeeper busybox \
-  cp -a /bitnami/zookeeper:latest /backups/latest
+docker run --rm -v /path/to/zookeeper-backups:/backups --volumes-from zookeeper busybox \
+  cp -a /bitnami/zookeeper /backups/latest
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker run --rm -v /path/to/zookeeper-backups:/backups --volumes-from `docker-compose ps -q zookeeper` busybox \
-  cp -a /bitnami/zookeeper:latest /backups/latest
+docker run --rm -v /path/to/zookeeper-backups:/backups --volumes-from `docker-compose ps -q zookeeper` busybox \
+  cp -a /bitnami/zookeeper /backups/latest
 ```
 
 ### Restoring a backup
@@ -499,7 +500,7 @@ $ docker run --rm -v /path/to/zookeeper-backups:/backups --volumes-from `docker-
 Restoring a backup is as simple as mounting the backup as volumes in the container.
 
 ```console
-$ docker run -v /path/to/zookeeper-backups/latest:/bitnami/zookeeper bitnami/zookeeper:latest
+docker run -v /path/to/zookeeper-backups/latest:/bitnami/zookeeper bitnami/zookeeper:latest
 ```
 
 or using Docker Compose:
@@ -523,7 +524,7 @@ Bitnami provides up-to-date versions of Apache ZooKeeper, including security pat
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/zookeeper:latest
+docker pull bitnami/zookeeper:latest
 ```
 
 or if you're using Docker Compose, update the value of the image property to
@@ -538,14 +539,13 @@ Follow the steps on [creating a backup](#backing-up-your-container).
 #### Step 3: Remove the currently running container
 
 ```console
-$ docker rm -v zookeeper
+docker rm -v zookeeper
 ```
 
 or using Docker Compose:
 
-
 ```console
-$ docker-compose rm -v zookeeper
+docker-compose rm -v zookeeper
 ```
 
 #### Step 4: Run the new image
@@ -553,37 +553,37 @@ $ docker-compose rm -v zookeeper
 Re-create your container from the new image, [restoring your backup](#restoring-a-backup) if necessary.
 
 ```console
-$ docker run --name zookeeper bitnami/zookeeper:latest
+docker run --name zookeeper bitnami/zookeeper:latest
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose up zookeeper
+docker-compose up zookeeper
 ```
 
 ## Notable Changes
 
 ### 3.5.5-r95
 
-- Apache ZooKeeper configuration moved to bash scripts in the rootfs/ folder.
+* Apache ZooKeeper configuration moved to bash scripts in the rootfs/ folder.
 
 ### 3.4.12-r25
 
-- Configuration is not persisted, it is regenerated each time the container is created or it is used as volume.
+* Configuration is not persisted, it is regenerated each time the container is created or it is used as volume.
 
 ### 3.4.10-r4
 
-- The zookeeper container has been migrated to a non-root container approach. Previously the container run as `root` user and the zookeeper daemon was started as `zookeeper` user. From now own, both the container and the zookeeper daemon run as user `1001`.
+* The zookeeper container has been migrated to a non-root container approach. Previously the container run as `root` user and the zookeeper daemon was started as `zookeeper` user. From now own, both the container and the zookeeper daemon run as user `1001`.
   As a consequence, the configuration files are writable by the user running the zookeeper process.
 
 ### 3.4.10-r0
 
-- New release
+* New release
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -591,13 +591,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

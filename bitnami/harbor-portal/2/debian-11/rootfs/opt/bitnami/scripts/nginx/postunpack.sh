@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load libraries
 . /opt/bitnami/scripts/libnginx.sh
@@ -46,6 +46,8 @@ nginx_patch_httpoxy_vulnerability
 
 # Configure default HTTP port
 nginx_configure_port "$NGINX_DEFAULT_HTTP_PORT_NUMBER"
+# Configure default HTTPS port
+nginx_configure_port "$NGINX_DEFAULT_HTTPS_PORT_NUMBER" "${BITNAMI_ROOT_DIR}/scripts/nginx/bitnami-templates/default-https-server-block.conf"
 
 # shellcheck disable=SC1091
 

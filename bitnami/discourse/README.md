@@ -5,14 +5,13 @@
 > Discourse is an open source discussion platform with built-in moderation and governance systems that let discussion communities protect themselves from bad actors even without official moderators.
 
 [Overview of Discourse&reg;](http://www.discourse.org/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/discourse/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/discourse/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options in the [Environment Variables](#environment-variables) section for a more secure deployment.
@@ -30,8 +29,7 @@ $ docker-compose up -d
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-- [`2`, `2-debian-11`, `2.8.7`, `2.8.7-debian-11-r1`, `latest` (2/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/discourse/2/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -40,21 +38,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami Discourse Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/discourse).
 
 ```console
-$ docker pull bitnami/discourse:latest
+docker pull bitnami/discourse:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/discourse/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/discourse:[TAG]
+docker pull bitnami/discourse:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## How to use this image
@@ -66,8 +64,8 @@ Discourse requires access to a PostgreSQL database to store information. We'll u
 The main folder of this repository contains a functional [`docker-compose.yml`](https://github.com/bitnami/containers/blob/main/bitnami/discourse/docker-compose.yml) file. Run the application using it as shown below:
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/discourse/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/discourse/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 ### Using the Docker Command Line
@@ -77,14 +75,14 @@ If you want to run the application manually instead of using `docker-compose`, t
 #### Step 1: Create a network
 
 ```console
-$ docker network create discourse-network
+docker network create discourse-network
 ```
 
 #### Step 2: Create a volume for PostgreSQL persistence and create a PostgreSQL container
 
 ```console
 $ docker volume create --name postgresql_data
-$ docker run -d --name postgresql \
+docker run -d --name postgresql \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env POSTGRESQL_USERNAME=bn_discourse \
   --env POSTGRESQL_PASSWORD=bitnami123 \
@@ -98,7 +96,7 @@ $ docker run -d --name postgresql \
 
 ```console
 $ docker volume create --name redis_data
-$ docker run -d --name redis \
+docker run -d --name redis \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --network discourse-network \
   --volume redis_data:/bitnami/redis \
@@ -109,7 +107,7 @@ $ docker run -d --name redis \
 
 ```console
 $ docker volume create --name discourse_data
-$ docker run -d --name discourse \
+docker run -d --name discourse \
   -p 8080:8080 -p 8443:8443 \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env DISCOURSE_DATABASE_USER=bn_discourse \
@@ -124,7 +122,7 @@ $ docker run -d --name discourse \
 #### Step 5: Launch the Sidekiq container
 
 ```console
-$ docker run -d --name sidekiq \
+docker run -d --name sidekiq \
   --network discourse-network \
   --volume discourse_data:/bitnami/discourse \
   bitnami/discourse:latest /opt/bitnami/scripts/discourse-sidekiq/run.sh
@@ -136,7 +134,7 @@ Access your application at `http://your-ip/`
 
 If you need to run discourse administrative commands like [Create admin account from console](https://meta.discourse.org/t/create-admin-account-from-console/17274), you can do so by executing a shell inside the container and running with the proper environment variables.
 
-```
+```console
 cd /opt/bitnami/discourse
 RAILS_ENV=production bundle exec rake admin:create
 ```
@@ -194,13 +192,13 @@ This requires a minor change to the [`docker-compose.yml`](https://github.com/bi
 #### Step 1: Create a network (if it does not exist)
 
 ```console
-$ docker network create discourse-network
+docker network create discourse-network
 ```
 
 #### Step 2. Create a PostgreSQL container with host volume
 
 ```console
-$ docker run -d --name postgresql \
+docker run -d --name postgresql \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env POSTGRESQL_USERNAME=bn_discourse \
   --env POSTGRESQL_PASSWORD=bitnami123 \
@@ -213,7 +211,7 @@ $ docker run -d --name postgresql \
 #### Step 3. Create a Redis container with host volume
 
 ```console
-$ docker run -d --name redis \
+docker run -d --name redis \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --network discourse-network \
   --volume /path/to/redis-persistence:/bitnami/redis \
@@ -223,7 +221,7 @@ $ docker run -d --name redis \
 #### Step 4. Create the Discourse container with host volumes
 
 ```console
-$ docker run -d --name discourse \
+docker run -d --name discourse \
   -p 8080:8080 -p 8443:8443 \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env DISCOURSE_DATABASE_USER=bn_discourse \
@@ -238,7 +236,7 @@ $ docker run -d --name discourse \
 #### Step 5. Create the Sidekiq container with host volumes
 
 ```console
-$ docker run -d --name sidekiq \
+docker run -d --name sidekiq \
   --network discourse-network \
   --volume /path/to/discourse-persistence:/bitnami/discourse \
   bitnami/discourse:latest
@@ -282,11 +280,11 @@ When you start the Discourse image, you can adjust the configuration of the inst
 
 Available environment variables:
 
-##### User and Site configuration
+#### User and Site configuration
 
 - `DISCOURSE_ENABLE_HTTPS`: Whether to use HTTPS by default. Default: **no**
-- `DISCOURSE_EXTERNAL_HTTP_PORT_NUMBER`: Port to used by WordPress to generate URLs and links when accessing using HTTP. Will be ignored if multisite mode is not enabled. Default **80**
-- `DISCOURSE_EXTERNAL_HTTPS_PORT_NUMBER`: Port to used by WordPress to generate URLs and links when accessing using HTTPS. Will be ignored if multisite mode is not enabled. Default **443**
+- `DISCOURSE_EXTERNAL_HTTP_PORT_NUMBER`: Port to used by Discourse to generate URLs and links when accessing using HTTP. Will be ignored if multisite mode is not enabled. Default **80**
+- `DISCOURSE_EXTERNAL_HTTPS_PORT_NUMBER`: Port to used by Discourse to generate URLs and links when accessing using HTTPS. Will be ignored if multisite mode is not enabled. Default **443**
 - `DISCOURSE_USERNAME`: Discourse application username. Default: **user**
 - `DISCOURSE_PASSWORD`: Discourse application password. Default: **bitnami123**
 - `DISCOURSE_EMAIL`: Discourse application email. Default: **user@example.com**
@@ -303,7 +301,7 @@ Available environment variables:
 - `DISCOURSE_ENABLE_CONF_PERSISTENCE`: Whether to enable persistence of the Discourse `discourse.conf` configuration file. Default: **no**
 - `DISCOURSE_SKIP_BOOTSTRAP`: Whether to skip performing the initial bootstrapping for the application. This is necessary in case you use a database that already has Discourse data. Default: **no**
 
-##### Database connection configuration
+#### Database connection configuration
 
 - `DISCOURSE_DATABASE_HOST`: Hostname for PostgreSQL server. Default: **postgresql**
 - `DISCOURSE_DATABASE_PORT_NUMBER`: Port used by the PostgreSQL server. Default: **5432**
@@ -312,13 +310,14 @@ Available environment variables:
 - `DISCOURSE_DATABASE_PASSWORD`: Database password that Discourse will use to connect with the database. No defaults.
 - `ALLOW_EMPTY_PASSWORD`: It can be used to allow blank passwords. Default: **no**
 
-##### Redis connection configuration
+#### Redis connection configuration
 
 - `DISCOURSE_REDIS_HOST`: Hostname for Redis(R). Default: **redis**
 - `DISCOURSE_REDIS_PORT_NUMBER`: Port used by Redis(R). Default: **6379**
 - `DISCOURSE_REDIS_PASSWORD`: Password for Redis(R).
+- `DISCOURSE_REDIS_USE_SSL`: Whether to enable SSL for Redis(R). Default: **no**
 
-##### Create a database for Discourse using postgresql-client
+#### Create a database for Discourse using postgresql-client
 
 - `POSTGRESQL_CLIENT_DATABASE_HOST`: Hostname for the PostgreSQL server. Default: **postgresql**
 - `POSTGRESQL_CLIENT_DATABASE_PORT_NUMBER`: Port used by the PostgreSQL server. Default: **5432**
@@ -331,7 +330,7 @@ Available environment variables:
 - `POSTGRESQL_CLIENT_EXECUTE_SQL`: SQL code to execute in the PostgreSQL server. No defaults.
 - `ALLOW_EMPTY_PASSWORD`: It can be used to allow blank passwords. Default: **no**
 
-##### SMTP Configuration
+#### SMTP Configuration
 
 To configure Discourse to send email using SMTP you can set the following environment variables:
 
@@ -375,44 +374,44 @@ This would be an example of SMTP configuration using a Gmail account:
 
 - For manual execution:
 
-    - First, create the Discourse container:
+  - First, create the Discourse container:
 
-        ```console
-        $ docker run -d --name discourse -p 80:8080 -p 443:8443 \
-          --env DISCOURSE_DATABASE_USER=bn_discourse \
-          --env DISCOURSE_DATABASE_NAME=bitnami_discourse \
-          --env DISCOURSE_SMTP_HOST=smtp.gmail.com \
-          --env DISCOURSE_SMTP_PORT=587 \
-          --env DISCOURSE_SMTP_USER=your_email@gmail.com \
-          --env DISCOURSE_SMTP_PASSWORD=your_password \
-          --env DISCOURSE_SMTP_PROTOCOL=tls \
-          --network discourse-tier \
-          --volume /path/to/discourse-persistence:/bitnami \
-          bitnami/discourse:latest
-        ```
+    ```console
+    $ docker run -d --name discourse -p 80:8080 -p 443:8443 \
+      --env DISCOURSE_DATABASE_USER=bn_discourse \
+      --env DISCOURSE_DATABASE_NAME=bitnami_discourse \
+      --env DISCOURSE_SMTP_HOST=smtp.gmail.com \
+      --env DISCOURSE_SMTP_PORT=587 \
+      --env DISCOURSE_SMTP_USER=your_email@gmail.com \
+      --env DISCOURSE_SMTP_PASSWORD=your_password \
+      --env DISCOURSE_SMTP_PROTOCOL=tls \
+      --network discourse-tier \
+      --volume /path/to/discourse-persistence:/bitnami \
+      bitnami/discourse:latest
+    ```
 
-    - Then, create the Sidekiq container:
+  - Then, create the Sidekiq container:
 
-        ```console
-        $ docker run -d --name sidekiq \
-          --env DISCOURSE_DATABASE_USER=bn_discourse \
-          --env DISCOURSE_DATABASE_NAME=bitnami_discourse \
-          --env DISCOURSE_SMTP_HOST=smtp.gmail.com \
-          --env DISCOURSE_SMTP_PORT=587 \
-          --env DISCOURSE_SMTP_USER=your_email@gmail.com \
-          --env DISCOURSE_SMTP_PASSWORD=your_password \
-          --env DISCOURSE_SMTP_PROTOCOL=tls \
-          --network discourse-tier \
-          --volume /path/to/discourse-persistence:/bitnami \
-          bitnami/discourse:latest
-        ```
+    ```console
+    $ docker run -d --name sidekiq \
+      --env DISCOURSE_DATABASE_USER=bn_discourse \
+      --env DISCOURSE_DATABASE_NAME=bitnami_discourse \
+      --env DISCOURSE_SMTP_HOST=smtp.gmail.com \
+      --env DISCOURSE_SMTP_PORT=587 \
+      --env DISCOURSE_SMTP_USER=your_email@gmail.com \
+      --env DISCOURSE_SMTP_PASSWORD=your_password \
+      --env DISCOURSE_SMTP_PROTOCOL=tls \
+      --network discourse-tier \
+      --volume /path/to/discourse-persistence:/bitnami \
+      bitnami/discourse:latest
+    ```
 
 In order to verify your configuration works properly, you can test your configuration parameters from the container itself.
 
 ```console
-$ docker run -u root -it bitnami/discourse:latest bash
-$ install_packages swaks
-$ swaks --to your_email@domain.com --from your_email@domain.com --server your.smtp.server.com --auth LOGIN --auth-user your_email@domain.com -tls
+docker run -u root -it bitnami/discourse:latest bash
+install_packages swaks
+swaks --to your_email@domain.com --from your_email@domain.com --server your.smtp.server.com --auth LOGIN --auth-user your_email@domain.com -tls
 ```
 
 See the [documentation on troubleshooting SMTP issues](https://docs.bitnami.com/general/how-to/troubleshoot-smtp-issues/) if there are problems.
@@ -459,13 +458,13 @@ In case the database already contains data from a previous Discourse installatio
 The Bitnami Discourse Docker image sends the container logs to `stdout`. To view the logs:
 
 ```console
-$ docker logs discourse
+docker logs discourse
 ```
 
 Or using Docker Compose:
 
 ```console
-$ docker-compose logs discourse
+docker-compose logs discourse
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -479,13 +478,13 @@ To backup your data, configuration and logs, follow these simple steps:
 #### Step 1: Stop the currently running container
 
 ```console
-$ docker stop discourse
+docker stop discourse
 ```
 
 Or using Docker Compose:
 
 ```console
-$ docker-compose stop discourse
+docker-compose stop discourse
 ```
 
 #### Step 2: Run the backup command
@@ -493,7 +492,7 @@ $ docker-compose stop discourse
 We need to mount two volumes in a container we will use to create the backup: a directory on your host to store the backup in, and the volumes from the container we just stopped so we can access the data.
 
 ```console
-$ docker run --rm -v /path/to/discourse-backups:/backups --volumes-from discourse busybox \
+docker run --rm -v /path/to/discourse-backups:/backups --volumes-from discourse busybox \
   cp -a /bitnami/discourse /backups/latest
 ```
 
@@ -523,14 +522,14 @@ For the Discourse container:
 
 ### Upgrade this image
 
-Bitnami provides up-to-date versions of PostgreSQL and Discourse, including security patches, soon after they are made upstream. We recommend that you follow these steps to upgrade your container. We will cover here the upgrade of the Discourse container. For the PostgreSQL upgrade see: https://github.com/bitnami/containers/tree/main/bitnami/postgresql/blob/master/README.md#upgrade-this-image
+Bitnami provides up-to-date versions of PostgreSQL and Discourse, including security patches, soon after they are made upstream. We recommend that you follow these steps to upgrade your container. We will cover here the upgrade of the Discourse container. For the PostgreSQL upgrade see: <https://github.com/bitnami/containers/blob/main/bitnami/postgresql/README.md#user-content-upgrade-this-image>
 
 The `bitnami/discourse:latest` tag always points to the most recent release. To get the most recent release you can simple repull the `latest` tag from the Docker Hub with `docker pull bitnami/discourse:latest`. However it is recommended to use [tagged versions](https://hub.docker.com/r/bitnami/discourse/tags/).
 
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/discourse:latest
+docker pull bitnami/discourse:latest
 ```
 
 #### Step 2: Stop the running container
@@ -538,7 +537,7 @@ $ docker pull bitnami/discourse:latest
 Stop the currently running container using the command
 
 ```console
-$ docker-compose stop discourse
+docker-compose stop discourse
 ```
 
 #### Step 3: Take a snapshot of the application state
@@ -558,10 +557,10 @@ docker-compose rm -v discourse
 Update the image tag in `docker-compose.yml` and re-create your container with the new image:
 
 ```console
-$ docker-compose up -d
+docker-compose up -d
 ```
 
-# Notable Changes
+## Notable Changes
 
 ### 2.7.0-debian-10-r4
 
@@ -570,19 +569,19 @@ $ docker-compose up -d
 
 ### 2.4.4-debian-10-r8 release
 
-- Discourse and Sidekiq now make use of the same volume to persist data. This solves issues related to being unable to locate some files generated on-demand by the Sidekiq job scheduler. Related issues: [#142](https://github.com/bitnami/bitnami-docker-discourse/issues/142)
+- Discourse and Sidekiq now make use of the same volume to persist data. This solves issues related to being unable to locate some files generated on-demand by the Sidekiq job scheduler.
 
 ### 2.3.2-debian-9-r48 and 2.3.2-ol-7-r47
 
-- The Discourse container now uses Passenger's ['direct' process spawning method](https://www.phusionpassenger.com/docs/advanced_guides/in_depth/ruby/spawn_methods.html) (instead of the default 'smart'), which fixes a bug where settings would randomly revert back to the original values. This setting may cause an increase in memory usage. It is possible to configure the spawning method by setting the `DISCOURSE_PASSENGER_SPAWN_METHOD` environment variable. Related issues: [#107](https://github.com/bitnami/bitnami-docker-discourse/issues/107), [#109](https://github.com/bitnami/bitnami-docker-discourse/issues/109).
+- The Discourse container now uses Passenger's ['direct' process spawning method](https://www.phusionpassenger.com/docs/advanced_guides/in_depth/ruby/spawn_methods.html) (instead of the default 'smart'), which fixes a bug where settings would randomly revert back to the original values. This setting may cause an increase in memory usage. It is possible to configure the spawning method by setting the `DISCOURSE_PASSENGER_SPAWN_METHOD` environment variable.
 
 ### 2.2.5-debian-9-r9 and 2.2.5-ol-7-r8
 
-- It is now possible to import existing Discourse databases from other installations, as requested in [this ticket](https://github.com/bitnami/bitnami-docker-discourse/issues/82). In order to do this, use the environment variable `DISCOURSE_SKIP_INSTALL`, which forces the container not to run the initial Discourse setup wizard.
+- It is now possible to import existing Discourse databases from other installations. In order to do this, use the environment variable `DISCOURSE_SKIP_INSTALL`, which forces the container not to run the initial Discourse setup wizard.
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -598,13 +597,13 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

@@ -5,14 +5,13 @@
 > JasperReports Server is a stand-alone and embeddable reporting server. It is a central information hub, with reporting and analytics that can be embedded into web and mobile applications.
 
 [Overview of JasperReports](http://community.jaspersoft.com/project/jasperreports-server)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/jasperreports/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/jasperreports/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options in the [Environment Variables](#environment-variables) section for a more secure deployment.
@@ -26,7 +25,7 @@ $ docker-compose up -d
 - All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
 - Bitnami container images are released on a regular basis with the latest distribution packages available.
 
-# How to deploy JasperReports Server in Kubernetes?
+## How to deploy JasperReports Server in Kubernetes?
 
 Deploying Bitnami applications as Helm Charts is the easiest way to get started with our applications on Kubernetes. Read more about the installation in the [Bitnami JasperReports Chart GitHub repository](https://github.com/bitnami/charts/tree/master/bitnami/jasperreports).
 
@@ -40,8 +39,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-- [`8`, `8-debian-11`, `8.0.2`, `8.0.2-debian-11-r19`, `latest` (8/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/jasperreports/8/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -50,21 +48,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami JasperReports Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/jasperreports).
 
 ```console
-$ docker pull bitnami/jasperreports:latest
+docker pull bitnami/jasperreports:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/jasperreports/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/jasperreports:[TAG]
+docker pull bitnami/jasperreports:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## How to use this image
@@ -76,8 +74,8 @@ JasperReports requires access to a MySQL or MariaDB database to store informatio
 The main folder of this repository contains a functional [`docker-compose.yml`](https://github.com/bitnami/containers/blob/main/bitnami/jasperreports/docker-compose.yml) file. Run the application using it as shown below:
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/jasperreports/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/jasperreports/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 ### Provide jasper specific file config
@@ -111,14 +109,14 @@ If you want to run the application manually instead of using `docker-compose`, t
 #### Step 1: Create a network
 
 ```console
-$ docker network create jasperreports-network
+docker network create jasperreports-network
 ```
 
 #### Step 2: Create a volume for MariaDB persistence and create a MariaDB container
 
 ```console
 $ docker volume create --name mariadb_data
-$ docker run -d --name mariadb \
+docker run -d --name mariadb \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env MARIADB_USER=bn_jasperreports \
   --env MARIADB_PASSWORD=bitnami \
@@ -132,7 +130,7 @@ $ docker run -d --name mariadb \
 
 ```console
 $ docker volume create --name jasperreports_data
-$ docker run -d --name jasperreports \
+docker run -d --name jasperreports \
   -p 8080:8080 -p 8443:8443 \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env JASPERREPORTS_DATABASE_USER=bn_jasperreports \
@@ -186,13 +184,13 @@ This requires a minor change to the [`docker-compose.yml`](https://github.com/bi
 #### Step 1: Create a network (if it does not exist)
 
 ```console
-$ docker network create jasperreports-network
+docker network create jasperreports-network
 ```
 
 #### Step 2. Create a MariaDB container with host volume
 
 ```console
-$ docker run -d --name mariadb \
+docker run -d --name mariadb \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env MARIADB_USER=bn_jasperreports \
   --env MARIADB_PASSWORD=bitnami \
@@ -205,7 +203,7 @@ $ docker run -d --name mariadb \
 #### Step 3. Create the JasperReports container with host volumes
 
 ```console
-$ docker run -d --name jasperreports \
+docker run -d --name jasperreports \
   -p 8080:8080 -p 8443:8443 \
   --env ALLOW_EMPTY_PASSWORD=yes \
   --env JASPERREPORTS_DATABASE_USER=bn_jasperreports \
@@ -244,14 +242,14 @@ When you start the JasperReports image, you can adjust the configuration of the 
 
 Available environment variables:
 
-##### User and Site configuration
+#### User and Site configuration
 
 - `JASPERREPORTS_USERNAME`: JasperReports application username. Default: **jasperadmin**
 - `JASPERREPORTS_PASSWORD`: JasperReports application password. Default: **bitnami**
 - `JASPERREPORTS_EMAIL`: JasperReports application email. Default: **user@example.com**
 - `JASPERREPORTS_SKIP_BOOTSTRAP`: Whether to skip performing the initial bootstrapping for the application. This is necessary in case you use a database that already has JasperReports data. Default: **no**
 
-##### Database connection configuration
+#### Database connection configuration
 
 - `JASPERREPORTS_DATABASE_TYPE`: Database type to be used for the JasperReports installation. Allowed values: `mariadb`, `mysql`, `postgresql`. Default: **mariadb**
 - `JASPERREPORTS_DATABASE_HOST`: Hostname for the MariaDB or MySQL server. Default: **mariadb**
@@ -261,7 +259,7 @@ Available environment variables:
 - `JASPERREPORTS_DATABASE_PASSWORD`: Database password that JasperReports will use to connect with the database. No default.
 - `ALLOW_EMPTY_PASSWORD`: It can be used to allow blank passwords. Default: **no**
 
-##### Create a database for JasperReports using mysql-client
+#### Create a database for JasperReports using mysql-client
 
 - `MYSQL_CLIENT_DATABASE_HOST`: Hostname for the MariaDB or MySQL server. Default: **mariadb**
 - `MYSQL_CLIENT_DATABASE_PORT_NUMBER`: Port used by the MariaDB or MySQL server. Default: **3306**
@@ -276,7 +274,7 @@ Available environment variables:
 - `MYSQL_CLIENT_SSL_CA_FILE`: Path to the SSL CA file for the new database. No default.
 - `ALLOW_EMPTY_PASSWORD`: It can be used to allow blank passwords. Default: **no**
 
-##### SMTP Configuration
+#### SMTP Configuration
 
 To configure JasperReports to send email using SMTP you can set the following environment variables:
 
@@ -284,11 +282,13 @@ To configure JasperReports to send email using SMTP you can set the following en
 - `JASPERREPORTS_SMTP_PORT_NUMBER`: SMTP port.
 - `JASPERREPORTS_SMTP_USER`: SMTP account user.
 - `JASPERREPORTS_SMTP_PASSWORD`: SMTP account password.
-- `JASPERREPORTS_SMTP_PROTOCOL`: If specified, SMTP protocol to use. Allowed values: *tls*, *ssl*. No default.
+- `JASPERREPORTS_SMTP_PROTOCOL`: If specified, SMTP protocol to use. Allowed values: *smtp*, *smtps*. Default: **smtp**.
+- `JASPERREPORTS_SMTP_EMAIL`: Custom email address for the 'From:' field. If not specified, the `JASPERREPORTS_SMTP_USER` value is used.
 
-##### JasperReports base URL configuration
+#### JasperReports base URL configuration
 
-- `JASPERREPORTS_USE_ROOT_URL`: JasperReports application default URL. Default: **false** at http://example.com/jasperserver. http://example.com/ if **true**.
+- `JASPERREPORTS_USE_ROOT_URL`: JasperReports application default URL. Default: **false** at <http://example.com/jasperserver>. <http://example.com/> if **true**.
+
 #### Examples
 
 ##### SMTP configuration using a Gmail account
@@ -306,6 +306,7 @@ This would be an example of SMTP configuration using a Gmail account:
           - ALLOW_EMPTY_PASSWORD=yes
           - JASPERREPORTS_SMTP_HOST=smtp.gmail.com
           - JASPERREPORTS_SMTP_PORT_NUMBER=587
+          - JASPERREPORTS_SMTP_PROTOCOL=smtps
           - JASPERREPORTS_SMTP_USER=your_email@gmail.com
           - JASPERREPORTS_SMTP_PASSWORD=your_password
       ...
@@ -319,6 +320,7 @@ This would be an example of SMTP configuration using a Gmail account:
       --env JASPERREPORTS_DATABASE_NAME=bitnami_jasperreports \
       --env JASPERREPORTS_SMTP_HOST=smtp.gmail.com \
       --env JASPERREPORTS_SMTP_PORT_NUMBER=587 \
+      --env JASPERREPORTS_SMTP_PROTOCOL=smtps \
       --env JASPERREPORTS_SMTP_USER=your_email@gmail.com \
       --env JASPERREPORTS_SMTP_PASSWORD=your_password \
       --network jasperreports-tier \
@@ -368,13 +370,13 @@ In case the database already contains data from a previous JasperReports install
 The Bitnami JasperReports Docker image sends the container logs to `stdout`. To view the logs:
 
 ```console
-$ docker logs jasperreports
+docker logs jasperreports
 ```
 
 Or using Docker Compose:
 
 ```console
-$ docker-compose logs jasperreports
+docker-compose logs jasperreports
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -388,13 +390,13 @@ To backup your data, configuration and logs, follow these simple steps:
 #### Step 1: Stop the currently running container
 
 ```console
-$ docker stop jasperreports
+docker stop jasperreports
 ```
 
 Or using Docker Compose:
 
 ```console
-$ docker-compose stop jasperreports
+docker-compose stop jasperreports
 ```
 
 #### Step 2: Run the backup command
@@ -402,7 +404,7 @@ $ docker-compose stop jasperreports
 We need to mount two volumes in a container we will use to create the backup: a directory on your host to store the backup in, and the volumes from the container we just stopped so we can access the data.
 
 ```console
-$ docker run --rm -v /path/to/jasperreports-backups:/backups --volumes-from jasperreports bitnami/minideb \
+docker run --rm -v /path/to/jasperreports-backups:/backups --volumes-from jasperreports bitnami/minideb \
   cp -a /bitnami/jasperreports /backups/latest
 ```
 
@@ -432,14 +434,14 @@ For the JasperReports container:
 
 ### Upgrade this image
 
-Bitnami provides up-to-date versions of MariaDB and JasperReports, including security patches, soon after they are made upstream. We recommend that you follow these steps to upgrade your container. We will cover here the upgrade of the JasperReports container. For the MariaDB upgrade see: https://github.com/bitnami/containers/tree/main/bitnami/mariadb#upgrade-this-image
+Bitnami provides up-to-date versions of MariaDB and JasperReports, including security patches, soon after they are made upstream. We recommend that you follow these steps to upgrade your container. We will cover here the upgrade of the JasperReports container. For the MariaDB upgrade see: <https://github.com/bitnami/containers/tree/main/bitnami/mariadb#upgrade-this-image>
 
 The `bitnami/jasperreports:latest` tag always points to the most recent release. To get the most recent release you can simple repull the `latest` tag from the Docker Hub with `docker pull bitnami/jasperreports:latest`. However it is recommended to use [tagged versions](https://hub.docker.com/r/bitnami/jasperreports/tags/).
 
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/jasperreports:latest
+docker pull bitnami/jasperreports:latest
 ```
 
 #### Step 2: Stop the running container
@@ -447,7 +449,7 @@ $ docker pull bitnami/jasperreports:latest
 Stop the currently running container using the command
 
 ```console
-$ docker-compose stop jasperreports
+docker-compose stop jasperreports
 ```
 
 #### Step 3: Take a snapshot of the application state
@@ -467,12 +469,12 @@ docker-compose rm -v jasperreports
 Update the image tag in `docker-compose.yml` and re-create your container with the new image:
 
 ```console
-$ docker-compose up -d
+docker-compose up -d
 ```
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -486,7 +488,7 @@ The Bitnami team will review any PR that is created, feel free to create a PR if
 
 New versions and releases cadence are not going to be affected. Once a new version is released in the upstream project, the Bitnami container image will be updated to use the latest version, supporting the different branches supported by the upstream project as usual.
 
-# Notable Changes
+## Notable Changes
 
 ## 7.8.0-debian-10-r275
 
@@ -500,13 +502,13 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

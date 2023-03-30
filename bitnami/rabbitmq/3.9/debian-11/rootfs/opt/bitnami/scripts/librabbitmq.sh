@@ -368,7 +368,7 @@ EOF
         # When loading definitions, default vhost and user/pass won't be created: https://www.rabbitmq.com/definitions.html#import-on-boot
         if ! is_boolean_yes "$RABBITMQ_LOAD_DEFINITIONS"; then
             cat <<EOF
-default_vhost = ${RABBITMQ_VHOST}
+default_vhost = ${RABBITMQ_VHOST:?}
 default_user = ${RABBITMQ_USERNAME}
 EOF
             # In most cases (i.e. container images), it is not a concern to specify the default password this way
@@ -719,6 +719,48 @@ rabbitmq_join_cluster() {
 }
 
 ########################
+# Declare a new virtual host
+# Globals:
+#   BITNAMI_DEBUG
+#   RABBITMQ_BIN_DIR
+# Arguments:
+#   $1 - Name
+# Returns:
+#   None
+#########################
+rabbitmq_declare_vhost() {
+    local name="${1:?name is required}"
+    debug "Declaring vhost '${name}'..."
+
+    if ! debug_execute "${RABBITMQ_BIN_DIR}/rabbitmqctl" add_vhost -- "${name}"; then
+        error "Couldn't declared vhost '${name}'."
+        return 1
+    fi
+}
+
+########################
+# Allow a user to access a virtual host
+# Globals:
+#   BITNAMI_DEBUG
+#   RABBITMQ_BIN_DIR
+# Arguments:
+#   $1 - User
+#   $2 - Vhost
+# Returns:
+#   None
+#########################
+rabbitmq_set_user_vhost_permission() {
+    local user="${1:?user is required}"
+    local vhost="${2:?vhost is required}"
+    debug "Assigning permissions to user '${user}' to access vhost '${vhost}'..."
+
+    if ! debug_execute "${RABBITMQ_BIN_DIR}/rabbitmqctl" set_permissions --vhost "${vhost}" "${user}" ".*" ".*" ".*"; then
+        error "Couldn't assigned perrmissions to user '${user}' to access vhost '${vhost}'."
+        return 1
+    fi
+}
+
+########################
 # Ensure RabbitMQ is initialized
 # Globals:
 #   RABBITMQ_*
@@ -781,6 +823,15 @@ rabbitmq_initialize() {
             rabbitmq_change_password "$RABBITMQ_USERNAME" "$RABBITMQ_PASSWORD"
         fi
 
+        if [[ -n "${RABBITMQ_VHOSTS:-}" ]]; then
+            for vhost in ${RABBITMQ_VHOSTS}; do
+                rabbitmq_declare_vhost "${vhost}"
+                if [[ -n "${RABBITMQ_USERNAME}" ]]; then
+                    rabbitmq_set_user_vhost_permission "${RABBITMQ_USERNAME}" "${vhost}"
+                fi
+            done
+        fi
+
         if [[ "$RABBITMQ_NODE_TYPE" != "stats" ]] && [[ -n "$RABBITMQ_CLUSTER_NODE_NAME" ]]; then
             rabbitmq_join_cluster "$RABBITMQ_CLUSTER_NODE_NAME" "$RABBITMQ_NODE_TYPE"
         fi
@@ -809,6 +860,7 @@ rabbitmq_custom_init_scripts() {
                     "$f"
                 else
                     debug "Sourcing $f"
+                    # shellcheck disable=SC1090
                     . "$f"
                 fi
                 ;;

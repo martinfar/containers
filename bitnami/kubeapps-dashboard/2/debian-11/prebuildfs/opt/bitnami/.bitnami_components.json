@@ -1,30 +1,26 @@
 {
     "gosu": {
         "arch": "amd64",
-        "digest": "0c751c7e2ec0bc900a19dbec0306d6294fe744ddfb0fa64197ba1a36040092f0",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.14.0-152"
+        "version": "1.16.0-3"
     },
     "kubeapps": {
         "arch": "amd64",
-        "digest": "021b71199c7b0acf5c758830ae485d5717734a19e1629885a5238c317c2a679b",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "2.4.6-1"
+        "version": "2.6.4-1"
     },
     "nginx": {
         "arch": "amd64",
-        "digest": "72b33acf185384a75efb00cfbfc591e813f2efc089159fe5ef8b3a249a6182d7",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.23.1-0"
+        "version": "1.23.3-4"
     },
     "render-template": {
         "arch": "amd64",
-        "digest": "9690a34674f152e55c71a55275265314ed1bb29e0be8a75d7880488509f70deb",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.0.3-151"
+        "version": "1.0.5-2"
     }
 }

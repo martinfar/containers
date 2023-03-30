@@ -5,7 +5,6 @@
 > Laravel is an open source PHP framework for web application development.
 
 [Overview of Laravel](https://laravel.com/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
@@ -13,9 +12,9 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 ### Local workspace
 
 ```console
-$ mkdir ~/myapp && cd ~/myapp
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/laravel/docker-compose.yml
-$ docker-compose up
+mkdir ~/myapp && cd ~/myapp
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/laravel/docker-compose.yml
+docker-compose up
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options for the [MariaDB container](https://github.com/bitnami/containers/blob/main/bitnami/mariadb#readme) for a more secure deployment.
@@ -33,8 +32,7 @@ $ docker-compose up
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`9`, `9-debian-11`, `9.3.1`, `9.3.1-debian-11-r3`, `latest` (9/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/laravel/9/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -60,13 +58,13 @@ cd ~/myapp
 Download the [docker-compose.yml](https://raw.githubusercontent.com/bitnami/containers/main/bitnami/laravel/docker-compose.yml) file in the application directory:
 
 ```console
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/laravel/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/laravel/docker-compose.yml
 ```
 
 Finally launch the Laravel application development environment using:
 
 ```console
-$ docker-compose up
+docker-compose up
 ```
 
 Among other things, the above command creates a container service, named `myapp`, for Laravel development and bootstraps a new Laravel application in the application directory. You can use your favorite IDE for developing the application.
@@ -94,56 +92,56 @@ Commands can be launched inside the `myapp` Laravel Development Container with `
 The general structure of the `exec` command is:
 
 ```console
-$ docker-compose exec <service> <command>
+docker-compose exec <service> <command>
 ```
 
 , where `<service>` is the name of the container service as described in the `docker-compose.yml` file and `<command>` is the command you want to launch inside the service.
 
 Following are a few examples of launching some commonly used Laravel development commands inside the `myapp` service container.
 
-- List all `artisan` commands:
+* List all `artisan` commands:
 
   ```console
-  $ docker-compose exec myapp php artisan list
+  docker-compose exec myapp php artisan list
   ```
 
-- List all registered routes:
+* List all registered routes:
 
   ```console
-  $ docker-compose exec myapp php artisan route:list
+  docker-compose exec myapp php artisan route:list
   ```
 
-- Create a new application controller named `UserController`:
+* Create a new application controller named `UserController`:
 
   ```console
-  $ docker-compose exec myapp php artisan make:controller UserController
+  docker-compose exec myapp php artisan make:controller UserController
   ```
 
-- Installing a new composer package called `phpmailer/phpmailer` with version `5.2.*`:
+* Installing a new composer package called `phpmailer/phpmailer` with version `5.2.*`:
 
   ```console
-  $ docker-compose exec myapp composer require phpmailer/phpmailer:5.2.*
+  docker-compose exec myapp composer require phpmailer/phpmailer:5.2.*
   ```
 
-# Contributing
+## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/blob/main/bitnami/laravel/issues), or submit a [pull request](https://github.com/bitnami/containers/blob/main/bitnami/laravel/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues/new) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Special Thanks
 
 We want to thank the following individuals for reporting vulnerabilities responsibly and helping improve the security of this container.
 
-- [LEI WANG](https://github.com/ssst0n3): [APP_KEY fixed into the docker image](https://github.com/bitnami/bitnami-docker-laravel/issues/139)
+* [LEI WANG](https://github.com/ssst0n3): APP_KEY fixed into the docker image
 
 ## Issues
 
-If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/blob/main/bitnami/laravel/issues/new). Be sure to include the following information in your issue:
+If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/issues/new). Be sure to include the following information in your issue:
 
-- Host OS and version
-- Docker version (`docker version`)
-- Output of `docker info`
-- Version of this container
-- The command you used to run the container, and any relevant output you saw (masking any sensitive information)
+* Host OS and version
+* Docker version (`docker version`)
+* Output of `docker info`
+* Version of this container
+* The command you used to run the container, and any relevant output you saw (masking any sensitive information)
 
 ### Community supported solution
 
@@ -155,13 +153,13 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

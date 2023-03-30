@@ -284,6 +284,7 @@ magento_initialize() {
         # Setup would be hard as it would require to configure Sendmail (SMTP not supported) and authorization keys
         # 'You need to configure Two-Factor Authorization in order to proceed to your store's admin area'
         # 'An E-mail was sent to you with further instructions'
+        magento_execute module:disable "Magento_AdminAdobeImsTwoFactorAuth"
         magento_execute module:disable "Magento_TwoFactorAuth"
 
         # Set the Magento mode in 'env.php'
@@ -311,11 +312,11 @@ magento_initialize() {
 
         # Configure PHP options provided via envvars in .user.ini (which overrides configuration in php.ini)
         for user_ini_file in "${MAGENTO_BASE_DIR}/.user.ini" "${MAGENTO_BASE_DIR}/pub/.user.ini"; do
-            configure_permissions_ownership "$user_ini_file" -f "660"
+            am_i_root && configure_permissions_ownership "$user_ini_file" -f "660"
             php_set_runtime_config "$user_ini_file"
             # Ensure that the .user.ini files cannot be written to by the web server user
             # This file allows for PHP-FPM to set application-specific PHP settings, and could be a security risk if left writable
-            configure_permissions_ownership "$user_ini_file" -f "440"
+            am_i_root && configure_permissions_ownership "$user_ini_file" -f "440"
         done
 
         info "Persisting Magento installation"

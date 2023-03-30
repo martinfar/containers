@@ -5,7 +5,6 @@
 > Metrics Server aggregates resource usage data, such as container CPU and memory usage, in a Kubernetes cluster and makes it available via the Metrics API.
 
 [Overview of Metrics Server](https://github.com/kubernetes-incubator/metrics-server)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
@@ -13,7 +12,7 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 Deploy Metrics Server on your [Kubernetes cluster](https://github.com/kubernetes/heapster/tree/master/docs).
 
 ```console
-$ docker run --name metrics-server bitnami/metrics-server:latest
+docker run --name metrics-server bitnami/metrics-server:latest
 ```
 
 ## Why use Bitnami Images?
@@ -39,8 +38,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`0`, `0-debian-11`, `0.6.1`, `0.6.1-debian-11-r22`, `latest` (0/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/metrics-server/0/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -52,27 +50,28 @@ For further documentation, please check [here](https://github.com/kubernetes-inc
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/blob/main/bitnami/metrics-server/issues), or submit a [pull
-request](https://github.com/bitnami/containers/blob/main/bitnami/metrics-server/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues/new) or submitting a [pull
+request](https://github.com/bitnami/containers/pulls/new) with your contribution.
 
 ## Issues
 
 <!-- If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/issues/new/choose). For us to provide better support, be sure to include the following information in your issue: -->
 
-- Host OS and version
-- Docker version (`docker version`)
-- Output of `docker info`
-- Version of this container
-- The command you used to run the container, and any relevant output you saw (masking any sensitive information)
+* Host OS and version
+* Docker version (`docker version`)
+* Output of `docker info`
+* Version of this container
+* The command you used to run the container, and any relevant output you saw (masking any sensitive information)
 
 ## License
-Copyright &copy; 2022 Bitnami
+
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

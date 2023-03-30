@@ -2,16 +2,15 @@
 
 ## What is Promtail?
 
-> Promtail is an agent which ships the contents of local logs to a private Grafana Loki instance or Grafana Cloud. Features log file discovery, label management and exposes a web server.
+> Promtail is an agent that ships the contents of local logs to a private Grafana Loki instance or Grafana Cloud. Features log file discovery, and label management, and exposes a web server.
 
 [Overview of Promtail](https://grafana.com/docs/loki/latest/clients/promtail/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-$ docker run --name promtail bitnami/promtail:latest
+docker run --name promtail bitnami/promtail:latest
 ```
 
 ## Why use Bitnami Images?
@@ -27,8 +26,7 @@ $ docker run --name promtail bitnami/promtail:latest
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`2`, `2-debian-11`, `2.6.1`, `2.6.1-debian-11-r4`, `latest` (2/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/promtail/2/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -37,21 +35,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami promtail Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/promtail).
 
 ```console
-$ docker pull bitnami/promtail:latest
+docker pull bitnami/promtail:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/promtail/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/promtail:[TAG]
+docker pull bitnami/promtail:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Why use a non-root container?
@@ -65,14 +63,14 @@ Non-root container images add an extra layer of security and are generally recom
 To run commands inside this container you can use `docker run`, for example to execute `promtail --version` you can follow the example below:
 
 ```console
-$ docker run --rm --name promtail bitnami/promtail:latest -- --version
+docker run --rm --name promtail bitnami/promtail:latest -- --version
 ```
 
 Check the [official Promtail documentation](https://grafana.com/docs/loki/latest/clients/promtail/) to understand the possible configurations.
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -80,13 +78,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

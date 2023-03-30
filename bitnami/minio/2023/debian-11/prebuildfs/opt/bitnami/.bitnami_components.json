@@ -1,0 +1,26 @@
+{
+    "gosu": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.16.0-3"
+    },
+    "minio": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "2023.3.24-0"
+    },
+    "minio-client": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "2023.3.23-0"
+    },
+    "wait-for-port": {
+        "arch": "amd64",
+        "distro": "debian-11",
+        "type": "NAMI",
+        "version": "1.0.6-2"
+    }
+}

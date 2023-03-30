@@ -6,19 +6,17 @@
 
 [Overview of Concourse](https://concourse-ci.org/)
 
-
-
 ## TL;DR
 
 ```console
-$ docker run --name concourse bitnami/concourse:latest
+docker run --name concourse bitnami/concourse:latest
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/concourse/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/concourse/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options for the [PostgreSQL container](https://github.com/bitnami/containers/tree/main/bitnami/postgresql#readme) for a more secure deployment.
@@ -38,10 +36,9 @@ Non-root container images add an extra layer of security and are generally recom
 
 ## Supported tags and respective `Dockerfile` links
 
-Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/).
+Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`7`, `7-debian-11`, `7.8.2`, `7.8.2-debian-11-r7`, `latest` (7/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/concourse/7/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -50,21 +47,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami concourse Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/concourse).
 
 ```console
-$ docker pull bitnami/concourse:latest
+docker pull bitnami/concourse:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/concourse/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/concourse:[TAG]
+docker pull bitnami/concourse:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Persisting your application
@@ -74,7 +71,7 @@ If you remove the container all your data will be lost, and the next time you ru
 For persistence you should mount a directory at the `/bitnami` path. If the mounted directory is empty, it will be initialized on the first run.
 
 ```console
-$ docker run \
+docker run \
     -v /path/to/concourse-persistence:/bitnami/concourse \
     bitnami/concourse:latest
 ```
@@ -100,7 +97,7 @@ Containers attached to the same network can communicate with each other using th
 #### Step 1: Create a network
 
 ```console
-$ docker network create concourse-network --driver bridge
+docker network create concourse-network --driver bridge
 ```
 
 #### Step 2: Launch the concourse container within your network
@@ -108,7 +105,7 @@ $ docker network create concourse-network --driver bridge
 Use the `--network <NETWORK>` argument to the `docker run` command to attach the container to the `concourse-network` network.
 
 ```console
-$ docker run --name concourse-node1 --network concourse-network bitnami/concourse:latest
+docker run --name concourse-node1 --network concourse-network bitnami/concourse:latest
 ```
 
 #### Step 3: Run another container
@@ -124,7 +121,7 @@ Find how to configure Concourse in its [official documentation](https://concours
 The Bitnami concourse Docker image sends the container logs to `stdout`. To view the logs:
 
 ```console
-$ docker logs concourse
+docker logs concourse
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -138,7 +135,7 @@ Bitnami provides up-to-date versions of concourse, including security patches, s
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/concourse:latest
+docker pull bitnami/concourse:latest
 ```
 
 #### Step 2: Stop the running container
@@ -146,13 +143,13 @@ $ docker pull bitnami/concourse:latest
 Stop the currently running container using the command
 
 ```console
-$ docker stop concourse
+docker stop concourse
 ```
 
 #### Step 3: Remove the currently running container
 
 ```console
-$ docker rm -v concourse
+docker rm -v concourse
 ```
 
 #### Step 4: Run the new image
@@ -160,12 +157,12 @@ $ docker rm -v concourse
 Re-create your container from the new image.
 
 ```console
-$ docker run --name concourse bitnami/concourse:latest
+docker run --name concourse bitnami/concourse:latest
 ```
 
 ## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -173,13 +170,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

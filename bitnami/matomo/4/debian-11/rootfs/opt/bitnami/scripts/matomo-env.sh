@@ -24,6 +24,7 @@ export BITNAMI_DEBUG="${BITNAMI_DEBUG:-false}"
 matomo_env_vars=(
     MATOMO_DATA_TO_PERSIST
     MATOMO_SKIP_BOOTSTRAP
+    MATOMO_PROXY_HOST_HEADER
     MATOMO_PROXY_CLIENT_HEADER
     MATOMO_ENABLE_ASSUME_SECURE_PROTOCOL
     MATOMO_ENABLE_FORCE_SSL
@@ -51,6 +52,7 @@ matomo_env_vars=(
     MATOMO_DATABASE_NAME
     MATOMO_DATABASE_USER
     MATOMO_DATABASE_PASSWORD
+    MATOMO_DATABASE_TABLE_PREFIX
     SMTP_HOST
     SMTP_PORT
     MATOMO_SMTP_PORT
@@ -79,12 +81,13 @@ export MATOMO_CONF_FILE="${MATOMO_CONF_DIR}/config.ini.php"
 
 # Matomo persistence configuration
 export MATOMO_VOLUME_DIR="${BITNAMI_VOLUME_DIR}/matomo"
-export MATOMO_DATA_TO_PERSIST="${MATOMO_DATA_TO_PERSIST:-config/config.ini.php misc/user plugins js}"
+export MATOMO_DATA_TO_PERSIST="${MATOMO_DATA_TO_PERSIST:-config/config.ini.php misc plugins js}"
 
 # Matomo configuration
 export MATOMO_SKIP_BOOTSTRAP="${MATOMO_SKIP_BOOTSTRAP:-}" # only used during the first initialization
 
 # Reverse Proxy Configuration options
+export MATOMO_PROXY_HOST_HEADER="${MATOMO_PROXY_HOST_HEADER:-}" # only used during the first initialization
 export MATOMO_PROXY_CLIENT_HEADER="${MATOMO_PROXY_CLIENT_HEADER:-}" # only used during the first initialization
 export MATOMO_ENABLE_ASSUME_SECURE_PROTOCOL="${MATOMO_ENABLE_ASSUME_SECURE_PROTOCOL:-no}" # only used during the first initialization
 export MATOMO_ENABLE_FORCE_SSL="${MATOMO_ENABLE_FORCE_SSL:-no}" # only used during the first initialization
@@ -126,6 +129,7 @@ export MATOMO_DATABASE_PORT_NUMBER="${MATOMO_DATABASE_PORT_NUMBER:-3306}" # only
 export MATOMO_DATABASE_NAME="${MATOMO_DATABASE_NAME:-bitnami_matomo}" # only used during the first initialization
 export MATOMO_DATABASE_USER="${MATOMO_DATABASE_USER:-bn_matomo}" # only used during the first initialization
 export MATOMO_DATABASE_PASSWORD="${MATOMO_DATABASE_PASSWORD:-}" # only used during the first initialization
+export MATOMO_DATABASE_TABLE_PREFIX="${MATOMO_DATABASE_TABLE_PREFIX:-matomo_}" # only used during the first initialization
 
 # PHP configuration
 export PHP_DEFAULT_MEMORY_LIMIT="256M" # only used at build time

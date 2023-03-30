@@ -29,16 +29,19 @@ export LDAP_BIN_DIR="${LDAP_BASE_DIR}/bin"
 export LDAP_SBIN_DIR="${LDAP_BASE_DIR}/sbin"
 export LDAP_CONF_DIR="${LDAP_BASE_DIR}/etc"
 export LDAP_SHARE_DIR="${LDAP_BASE_DIR}/share"
+export LDAP_VAR_DIR="${LDAP_BASE_DIR}/var"
 export LDAP_VOLUME_DIR="/bitnami/openldap"
 export LDAP_DATA_DIR="${LDAP_VOLUME_DIR}/data"
 export LDAP_ONLINE_CONF_DIR="${LDAP_VOLUME_DIR}/slapd.d"
-export LDAP_PID_FILE="${LDAP_BASE_DIR}/var/run/slapd.pid"
+export LDAP_PID_FILE="${LDAP_VAR_DIR}/run/slapd.pid"
 export LDAP_CUSTOM_LDIF_DIR="${LDAP_CUSTOM_LDIF_DIR:-/ldifs}"
 export LDAP_CUSTOM_SCHEMA_FILE="${LDAP_CUSTOM_SCHEMA_FILE:-/schema/custom.ldif}"
+export LDAP_CUSTOM_SCHEMA_DIR="${LDAP_CUSTOM_SCHEMA_DIR:-/schemas}"
 export PATH="${LDAP_BIN_DIR}:${LDAP_SBIN_DIR}:$PATH"
 export LDAP_TLS_CERT_FILE="${LDAP_TLS_CERT_FILE:-}"
 export LDAP_TLS_KEY_FILE="${LDAP_TLS_KEY_FILE:-}"
 export LDAP_TLS_CA_FILE="${LDAP_TLS_CA_FILE:-}"
+export LDAP_TLS_VERIFY_CLIENTS="${LDAP_TLS_VERIFY_CLIENTS:-never}"
 export LDAP_TLS_DH_PARAMS_FILE="${LDAP_TLS_DH_PARAMS_FILE:-}"
 # Users
 export LDAP_DAEMON_USER="slapd"
@@ -109,14 +112,6 @@ ldap_validate() {
         error "$1"
         error_code=1
     }
-    check_allowed_port() {
-        local port_var="${1:?missing port variable}"
-        local validate_port_args=()
-        ! am_i_root && validate_port_args+=("-unprivileged")
-        if ! err=$(validate_port "${validate_port_args[@]}" "${!port_var}"); then
-            print_validation_error "An invalid port was specified in the environment variable ${port_var}: ${err}."
-        fi
-    }
     for var in LDAP_SKIP_DEFAULT_TREE LDAP_ENABLE_TLS; do
         if ! is_yes_no_value "${!var}"; then
             print_validation_error "The allowed values for $var are: yes or no"
@@ -152,8 +147,6 @@ ldap_validate() {
             print_validation_error "LDAP_PORT_NUMBER and LDAP_LDAPS_PORT_NUMBER are bound to the same port!"
         fi
     fi
-    [[ -n "$LDAP_PORT_NUMBER" ]] && check_allowed_port LDAP_PORT_NUMBER
-    [[ -n "$LDAP_LDAPS_PORT_NUMBER" ]] && check_allowed_port LDAP_LDAPS_PORT_NUMBER
 
     [[ "$error_code" -eq 0 ]] || exit "$error_code"
 }
@@ -196,12 +189,19 @@ is_ldap_not_running() {
 #   None
 #########################
 ldap_start_bg() {
-    local -a flags=("-h" "ldap://:${LDAP_PORT_NUMBER}/ ldapi:/// " "-F" "${LDAP_CONF_DIR}/slapd.d")
+    local -r retries="${1:-12}"
+    local -r sleep_time="${2:-1}"
+    local -a flags=("-h" "ldap://:${LDAP_PORT_NUMBER}/ ldapi:/// " "-F" "${LDAP_CONF_DIR}/slapd.d" "-d" "$LDAP_LOGLEVEL")
+
     if is_ldap_not_running; then
         info "Starting OpenLDAP server in background"
         ulimit -n "$LDAP_ULIMIT_NOFILES"
         am_i_root && flags=("-u" "$LDAP_DAEMON_USER" "${flags[@]}")
-        debug_execute slapd "${flags[@]}"
+        debug_execute slapd "${flags[@]}" &
+        if ! retry_while is_ldap_running "$retries" "$sleep_time"; then
+            error "OpenLDAP failed to start"
+            return 1
+        fi
     fi
 }
 
@@ -223,7 +223,7 @@ ldap_stop() {
         for f in "${db_files[@]}"; do
             debug_execute fuser "$f" && return_value=1
         done
-        return $return_value
+        return "$return_value"
     }
 
     is_ldap_not_running && return
@@ -233,6 +233,84 @@ ldap_stop() {
         error "OpenLDAP failed to stop"
         return 1
     fi
+}
+########################
+# Create slapd.ldif
+# Globals:
+#   LDAP_*
+# Arguments:
+#   None
+# Returns:
+#   None
+#########################
+ldap_create_slapd_file() {
+    info "Creating slapd.ldif"
+    cat > "${LDAP_SHARE_DIR}/slapd.ldif" << EOF
+#
+# See slapd-config(5) for details on configuration options.
+# This file should NOT be world readable.
+#
+
+dn: cn=config
+objectClass: olcGlobal
+cn: config
+olcArgsFile: /opt/bitnami/openldap/var/run/slapd.args
+olcPidFile: /opt/bitnami/openldap/var/run/slapd.pid
+
+#
+# Schema settings
+#
+
+dn: cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: schema
+
+include: file:///opt/bitnami/openldap/etc/schema/core.ldif
+
+#
+# Frontend settings
+#
+
+dn: olcDatabase=frontend,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcFrontendConfig
+olcDatabase: frontend
+
+#
+# Configuration database
+#
+
+dn: olcDatabase=config,cn=config
+objectClass: olcDatabaseConfig
+olcDatabase: config
+olcAccess: to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" manage by * none
+
+#
+# Server status monitoring
+#
+
+dn: olcDatabase=monitor,cn=config
+objectClass: olcDatabaseConfig
+olcDatabase: monitor
+olcAccess: to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by dn.base="cn=Manager,dc=my-domain,dc=com" read by * none
+
+#
+# Backend database definitions
+#
+
+dn: olcDatabase=mdb,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcMdbConfig
+olcDatabase: mdb
+olcDbMaxSize: 1073741824
+olcSuffix: dc=my-domain,dc=com
+olcRootDN: cn=Manager,dc=my-domain,dc=com
+olcMonitoring: FALSE
+olcDbDirectory:	/bitnami/openldap/data
+olcDbIndex: objectClass eq,pres
+olcDbIndex: ou,cn,mail,surname,givenname eq,pres,sub
+EOF
+
 }
 
 ########################
@@ -247,8 +325,14 @@ ldap_stop() {
 ldap_create_online_configuration() {
     info "Creating LDAP online configuration"
 
+    ldap_create_slapd_file
     ! am_i_root && replace_in_file "${LDAP_SHARE_DIR}/slapd.ldif" "uidNumber=0" "uidNumber=$(id -u)"
-    debug_execute slapadd -F "$LDAP_ONLINE_CONF_DIR" -n 0 -l "${LDAP_SHARE_DIR}/slapd.ldif"
+    local -a flags=(-F "$LDAP_ONLINE_CONF_DIR" -n 0 -l "${LDAP_SHARE_DIR}/slapd.ldif")
+    if am_i_root; then
+        debug_execute gosu "$LDAP_DAEMON_USER" slapadd "${flags[@]}"
+    else
+        debug_execute slapadd "${flags[@]}"
+    fi
 }
 
 ########################
@@ -355,6 +439,23 @@ ldap_add_custom_schema() {
 }
 
 ########################
+# Add custom schemas
+# Globals:
+#   LDAP_*
+# Arguments:
+#   None
+# Returns
+#   None
+#########################
+ldap_add_custom_schemas() {
+    info "Adding custom schemas : $LDAP_CUSTOM_SCHEMA_DIR ..."
+    find "$LDAP_CUSTOM_SCHEMA_DIR" -maxdepth 1 \( -type f -o -type l \) -iname '*.ldif' -print0 | sort -z | xargs --null -I{} bash -c ". /opt/bitnami/scripts/libos.sh && debug_execute slapadd -F \"$LDAP_ONLINE_CONF_DIR\" -n 0 -l {}"
+    ldap_stop
+    while is_ldap_running; do sleep 1; done
+    ldap_start_bg
+}
+
+########################
 # Create LDAP tree
 # Globals:
 #   LDAP_*
@@ -452,7 +553,7 @@ ldap_add_custom_ldifs() {
 #########################
 ldap_configure_permissions() {
   debug "Ensuring expected directories/files exist..."
-  for dir in "$LDAP_SHARE_DIR" "$LDAP_DATA_DIR" "$LDAP_ONLINE_CONF_DIR"; do
+  for dir in "$LDAP_SHARE_DIR" "$LDAP_DATA_DIR" "$LDAP_ONLINE_CONF_DIR" "$LDAP_VAR_DIR"; do
       ensure_dir_exists "$dir"
       if am_i_root; then
           chown -R "$LDAP_DAEMON_USER:$LDAP_DAEMON_GROUP" "$dir"
@@ -492,6 +593,9 @@ ldap_initialize() {
         fi
         if [[ -f "$LDAP_CUSTOM_SCHEMA_FILE" ]]; then
             ldap_add_custom_schema
+        fi
+        if ! is_dir_empty "$LDAP_CUSTOM_SCHEMA_DIR"; then
+            ldap_add_custom_schemas
         fi
         if ! is_dir_empty "$LDAP_CUSTOM_LDIF_DIR"; then
             ldap_add_custom_ldifs
@@ -561,6 +665,9 @@ olcTLSCertificateFile: $LDAP_TLS_CERT_FILE
 -
 replace: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: $LDAP_TLS_KEY_FILE
+-
+replace: olcTLSVerifyClient
+olcTLSVerifyClient: $LDAP_TLS_VERIFY_CLIENTS
 EOF
     if [[ -f "$LDAP_TLS_DH_PARAMS_FILE" ]]; then
         cat >> "${LDAP_SHARE_DIR}/certs.ldif" << EOF

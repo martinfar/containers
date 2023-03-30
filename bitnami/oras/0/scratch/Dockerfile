@@ -1,19 +1,45 @@
 FROM bitnami/minideb:bullseye as builder
 
+ARG TARGETARCH
+
+ENV OS_ARCH="${TARGETARCH:-amd64}"
+
 COPY prebuildfs /
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install required system packages and dependencies
-RUN install_packages ca-certificates gzip tar wget
-RUN wget -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/oras-0.13.0-1-linux-amd64-debian-11.tar.gz && \
-    echo "aa4b40f9349406be381583fe4582726517c4be9539e7c4ada0338e9a43da4710  /tmp/bitnami/pkg/cache/oras-0.13.0-1-linux-amd64-debian-11.tar.gz" | sha256sum -c - && \
-    tar -zxf /tmp/bitnami/pkg/cache/oras-0.13.0-1-linux-amd64-debian-11.tar.gz -P --transform 's|^[^/]*/files|/opt/bitnami|' --wildcards '*/files' && \
-    rm -rf /tmp/bitnami/pkg/cache/oras-0.13.0-1-linux-amd64-debian-11.tar.gz
+RUN install_packages ca-certificates curl
+RUN mkdir -p /tmp/bitnami/pkg/cache/ && cd /tmp/bitnami/pkg/cache/ && \
+    COMPONENTS=( \
+      "oras-0.16.0-4-linux-${OS_ARCH}-debian-11" \
+    ) && \
+    for COMPONENT in "${COMPONENTS[@]}"; do \
+      if [ ! -f "${COMPONENT}.tar.gz" ]; then \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz" -O ; \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz.sha256" -O ; \
+      fi && \
+      sha256sum -c "${COMPONENT}.tar.gz.sha256" && \
+      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' && \
+      rm -rf "${COMPONENT}".tar.gz{,.sha256} ; \
+    done
 
 ######
 
 FROM scratch
+
+ARG TARGETARCH
+
+ENV OS_ARCH="${TARGETARCH:-amd64}"
+
+LABEL org.opencontainers.image.base.name="scratch" \
+      org.opencontainers.image.created="2023-03-30T10:17:23Z" \
+      org.opencontainers.image.description="Application packaged by VMware, Inc" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.ref.name="0.16.0-scratch-r8" \
+      org.opencontainers.image.title="oras" \
+      org.opencontainers.image.vendor="VMware, Inc." \
+      org.opencontainers.image.version="0.16.0"
 
 COPY prebuildfs /
 COPY rootfs /

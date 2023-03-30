@@ -1,51 +1,51 @@
 {
     "apache": {
         "arch": "amd64",
-        "digest": "903fc542776eb549981738f68fdd6435b2c8683686114500f157258dcfdc9617",
+        "digest": "d5cad8cbc55051131d136e9cdaa6f9802b24641302c8b02d823389c32b4daf30",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "2.4.54-152"
+        "version": "2.4.56-1"
     },
     "gosu": {
         "arch": "amd64",
-        "digest": "0c751c7e2ec0bc900a19dbec0306d6294fe744ddfb0fa64197ba1a36040092f0",
+        "digest": "bf2b90a31df691e3648c4a41190a926bb638c3a9fa1dfcde36623ce1bfaadc23",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.14.0-152"
+        "version": "1.16.0-3"
     },
     "libphp": {
         "arch": "amd64",
-        "digest": "f4495e4344887007c7596c92ddca98271a36d6776940db1e55bd43cf159afb01",
+        "digest": "24c55f56e7b585fb5e97094f8e6baa8889b0af01ca7cdcc0b268d717e195fb9d",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "8.0.21-1"
+        "version": "8.1.17-1"
     },
     "mysql-client": {
         "arch": "amd64",
-        "digest": "c85e4be9bcee70c86c7bc7e13742e2d97810ad8f7d6154f8b66811b6cc4d0948",
+        "digest": "6ed7c73b5e779521cf2f47a00ac54e6d2929213cb4eb3cbd9a4f12f84557c664",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "10.6.8-151"
+        "version": "10.6.12-2"
     },
     "php": {
         "arch": "amd64",
-        "digest": "bcb4d971d502982bfeb7c0ce195c6aa2483eeeca054d335df7c438651460546d",
+        "digest": "a2e46761af1cce1ac3ca73ab79097278efc9040c60e0564df819b7a7dfc01bc3",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "8.0.21-4"
+        "version": "8.1.17-3"
     },
     "phpbb": {
         "arch": "amd64",
-        "digest": "521585c1110ab36cbcb4e3759df61b07b72cd3fe326cbcb12605ce4a7f824502",
+        "digest": "3dfab08bc7bf7e449466d3e852f687e9acd7947e9bfb4faf5bfedb52475575a7",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "3.3.8-1"
+        "version": "3.3.10-2"
     },
     "render-template": {
         "arch": "amd64",
-        "digest": "9690a34674f152e55c71a55275265314ed1bb29e0be8a75d7880488509f70deb",
+        "digest": "d1a128e25098f793a92342efd5fa85c1075a2b21042929b269d23c6694e20c3b",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.0.3-151"
+        "version": "1.0.5-2"
     }
 }

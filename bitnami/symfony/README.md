@@ -5,7 +5,6 @@
 > Symfony is an Open Source PHP framework for web applications.
 
 [Overview of Symfony](https://symfony.com)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
@@ -13,9 +12,9 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 ### Local workspace
 
 ```console
-$ mkdir ~/myapp && cd ~/myapp
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/symfony/docker-compose.yml
-$ docker-compose up
+mkdir ~/myapp && cd ~/myapp
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/symfony/docker-compose.yml
+docker-compose up
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options for the [MariaDB container](https://github.com/bitnami/containers/blob/main/bitnami/mariadb#readme) for a more secure deployment.
@@ -33,11 +32,7 @@ $ docker-compose up
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`6.1`, `6.1-debian-11`, `6.1.3`, `6.1.3-debian-11-r1`, `latest` (6.1/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/symfony/6.1/debian-11/Dockerfile)
-* [`6.0`, `6.0-debian-11`, `6.0.11`, `6.0.11-debian-11-r1` (6.0/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/symfony/6.0/debian-11/Dockerfile)
-* [`5.4`, `5.4-debian-11`, `5.4.11`, `5.4.11-debian-11-r1` (5.4/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/symfony/5.4/debian-11/Dockerfile)
-* [`4.4`, `4.4-debian-11`, `4.4.44`, `4.4.44-debian-11-r1` (4.4/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/symfony/4.4/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -56,14 +51,14 @@ The quickest way to get started with the Bitnami Symfony Development Container i
 Begin by creating a directory for your Symfony application:
 
 ```console
-$ mkdir ~/myapp
-$ cd ~/myapp
+mkdir ~/myapp
+cd ~/myapp
 ```
 
 Download the [docker-compose.yml](https://raw.githubusercontent.com/bitnami/containers/main/bitnami/symfony/docker-compose.yml) file in the application directory:
 
 ```console
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/symfony/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/symfony/docker-compose.yml
 ```
 
 Set a few environment variables in the `docker-compose.yml`:
@@ -99,7 +94,7 @@ services:
 Finally launch the Symfony application development environment using:
 
 ```console
-$ docker-compose up
+docker-compose up
 ```
 
 The above command creates a container service for Symfony development and bootstraps a new Symfony application, named `myapp` in working directory. You can use your favorite IDE for developing the application.
@@ -117,35 +112,36 @@ Commands can be launched inside the `myapp` Symfony Development Container with `
 The general structure of the `exec` command is:
 
 ```console
-$ docker-compose exec <service> <command>
+docker-compose exec <service> <command>
 ```
+
 where `<service>` is the name of the container service as described in the `docker-compose.yml` file and `<command>` is the command you want to launch inside the service.
 
 Following are a few examples:
 
-- Create a new project named `foo`:
+* Create a new project named `foo`:
 
   ```console
-  $ docker-compose run myapp nami execute symfony createProject foo
+  docker-compose run myapp nami execute symfony createProject foo
   ```
 
-- Create a new project named `bar` which uses Symfony version `2.5.0`
+* Create a new project named `bar` which uses Symfony version `2.5.0`
 
   ```console
-  $ docker-compose run myapp nami execute symfony createProject "bar 2.5.0"
+  docker-compose run myapp nami execute symfony createProject "bar 2.5.0"
   ```
 
   Note: In the above two examples the `docker-compose.yml` file should be updated so that the `SYMFONY_PROJECT_NAME` specifies the project name that should be served my the PHP application server.
 
 ## Issues
 
-If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/blob/main/bitnami/symfony/issues/new). Be sure to include the following information in your issue:
+If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/issues/new). Be sure to include the following information in your issue:
 
-- Host OS and version
-- Docker version (`docker version`)
-- Output of `docker info`
-- Version of this container
-- The command you used to run the container, and any relevant output you saw (masking any sensitive information)
+* Host OS and version
+* Docker version (`docker version`)
+* Output of `docker info`
+* Version of this container
+* The command you used to run the container, and any relevant output you saw (masking any sensitive information)
 
 ### Community supported solution
 
@@ -157,7 +153,7 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -117,11 +117,19 @@ repmgr_validate() {
         fi
     fi
 
+    if [[ -z "$REPMGR_NODE_TYPE" ]] || ! [[ "$REPMGR_NODE_TYPE" =~ ^(data|witness)$ ]]; then
+        print_validation_error "Set the environment variable REPMGR_NODE_TYPE to 'data' or 'witness'."
+    fi
+
     if ! is_yes_no_value "$REPMGR_PGHBA_TRUST_ALL"; then
         print_validation_error "The allowed values for REPMGR_PGHBA_TRUST_ALL are: yes or no."
     fi
     if ! is_yes_no_value "$REPMGR_UPGRADE_EXTENSION"; then
         print_validation_error "The allowed values for REPMGR_UPGRADE_EXTENSION are: yes or no."
+    fi
+
+    if ! [[ "$REPMGR_FAILOVER" =~ ^(automatic|manual)$ ]]; then
+        print_validation_error "The allowed values for REPMGR_FAILOVER are: automatic or manual."
     fi
 
     [[ "$error_code" -eq 0 ]] || exit "$error_code"
@@ -306,9 +314,17 @@ repmgr_set_role() {
     primary_host=${primary_node[0]}
     primary_port=${primary_node[1]:-$REPMGR_PRIMARY_PORT}
 
-    if [[ -z "$primary_host" ]]; then
+    if [[ "$REPMGR_NODE_TYPE" = "data" ]]; then
+      if [[ -z "$primary_host" ]]; then
         info "There are no nodes with primary role. Assuming the primary role..."
         role="primary"
+      else
+        info "Node configured as standby"
+        role="standby"
+      fi
+    else
+      info "Node configured as witness"
+      role="witness"
     fi
 
     cat <<EOF
@@ -531,7 +547,7 @@ node_id=$(repmgr_get_node_id)
 node_name='${REPMGR_NODE_NAME}'
 location='${REPMGR_NODE_LOCATION}'
 conninfo='user=${REPMGR_USERNAME} $(repmgr_get_conninfo_password) host=${REPMGR_NODE_NETWORK_NAME} dbname=${REPMGR_DATABASE} port=${REPMGR_PORT_NUMBER} connect_timeout=${REPMGR_CONNECT_TIMEOUT}'
-failover='automatic'
+failover='${REPMGR_FAILOVER}'
 promote_command='$(repmgr_get_env_password) repmgr standby promote -f "${REPMGR_CONF_FILE}" --log-level DEBUG --verbose'
 follow_command='$(repmgr_get_env_password) repmgr standby follow -f "${REPMGR_CONF_FILE}" -W --log-level DEBUG --verbose'
 reconnect_attempts='${REPMGR_RECONNECT_ATTEMPTS}'
@@ -761,6 +777,49 @@ repmgr_unregister_standby() {
 }
 
 ########################
+# Unregister witness
+# Globals:
+#   REPMGR_*
+# Arguments:
+#   None
+# Returns:
+#   None
+#########################
+repmgr_unregister_witness() {
+    info "Unregistering witness node..."
+    local -r flags=("-f" "$REPMGR_CONF_FILE" "witness" "unregister" "-h" "$REPMGR_CURRENT_PRIMARY_HOST" "--verbose")
+
+    # The command below can fail when the node doesn't exist yet
+    if [[ "$REPMGR_USE_PASSFILE" = "true" ]]; then
+        PGPASSFILE="$REPMGR_PASSFILE_PATH" debug_execute "${REPMGR_BIN_DIR}/repmgr" "${flags[@]}" || true
+    else
+        PGPASSWORD="$REPMGR_PASSWORD" debug_execute "${REPMGR_BIN_DIR}/repmgr" "${flags[@]}" || true
+    fi
+}
+
+########################
+# Register witness
+# Globals:
+#   REPMGR_*
+# Arguments:
+#   None
+# Returns:
+#   None
+#########################
+repmgr_register_witness() {
+    info "Registering witness node..."
+    local -r flags=("-f" "$REPMGR_CONF_FILE" "witness" "register" "-h" "$REPMGR_CURRENT_PRIMARY_HOST" "--force" "--verbose")
+
+    repmgr_wait_primary_node
+
+    if [[ "$REPMGR_USE_PASSFILE" = "true" ]]; then
+        PGPASSFILE="$REPMGR_PASSFILE_PATH" debug_execute "${REPMGR_BIN_DIR}/repmgr" "${flags[@]}"
+    else
+        PGPASSWORD="$REPMGR_PASSWORD" debug_execute "${REPMGR_BIN_DIR}/repmgr" "${flags[@]}"
+    fi
+}
+
+########################
 # Standby follow.
 # Globals:
 #   REPMGR_*
@@ -875,7 +934,7 @@ repmgr_initialize() {
             fi
 
         fi
-    else
+    elif [[ "$REPMGR_ROLE" = "standby" ]]; then
         local -r psql_major_version="$(postgresql_get_major_version)"
 
         POSTGRESQL_MASTER_PORT_NUMBER="$REPMGR_CURRENT_PRIMARY_PORT"
@@ -893,5 +952,11 @@ repmgr_initialize() {
             repmgr_wait_primary_node
             repmgr_standby_follow
         fi
+    elif [[ "$REPMGR_ROLE" = "witness" ]]; then
+        postgresql_start_bg
+        repmgr_create_repmgr_user
+        repmgr_create_repmgr_db
+        repmgr_unregister_witness
+        repmgr_register_witness
     fi
 }

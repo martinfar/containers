@@ -1,58 +1,44 @@
 {
-    "git": {
-        "arch": "amd64",
-        "digest": "39ea3040baa552b4760c1100a3713f86493620c0a74121c1ceba50fe17341878",
-        "distro": "debian-11",
-        "type": "NAMI",
-        "version": "2.37.1-1"
-    },
     "gosu": {
         "arch": "amd64",
-        "digest": "0c751c7e2ec0bc900a19dbec0306d6294fe744ddfb0fa64197ba1a36040092f0",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.14.0-152"
+        "version": "1.16.0-3"
     },
     "mysql-client": {
         "arch": "amd64",
-        "digest": "c85e4be9bcee70c86c7bc7e13742e2d97810ad8f7d6154f8b66811b6cc4d0948",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "10.6.8-151"
+        "version": "10.6.12-2"
     },
     "node": {
         "arch": "amd64",
-        "digest": "1308eadfadd439cc82f4ca51185828f49cac7b38fcafd783e24f52c7c2768b4b",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "14.20.0-1"
+        "version": "18.15.0-1"
     },
     "python": {
         "arch": "amd64",
-        "digest": "90a2d048ed71588dfff55262b4522e3ee49418b7ea6e560054bf50988ae1265f",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "3.8.13-157"
+        "version": "3.8.16-8"
     },
     "rails": {
         "arch": "amd64",
-        "digest": "6e5bef232b694fe5d9521535a28ee1f7aec900c9cc74c0f60a8f06ccb8afa6a2",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "7.0.3-1-0"
+        "version": "7.0.4-3-1"
     },
     "ruby": {
         "arch": "amd64",
-        "digest": "842a1467306f1acb0648a972252150435af822938dc2e4c26063a26e8b2fcf88",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "2.7.6-151"
+        "version": "3.2.1-3"
     },
     "wait-for-port": {
         "arch": "amd64",
-        "digest": "0694ae67645c416d9f6875e90c0f7cef379b4ac8030a6a5b8b5cc9ca77c6975d",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.0.3-152"
+        "version": "1.0.6-2"
     }
 }

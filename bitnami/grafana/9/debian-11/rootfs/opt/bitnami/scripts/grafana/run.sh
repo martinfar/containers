@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-# set -o xtrace # Uncomment this line for debugging purpose
+# set -o xtrace # Uncomment this line for debugging purposes
 
 # Load Grafana environment
 . /opt/bitnami/scripts/grafana-env.sh
@@ -19,6 +19,7 @@ declare -a args=(
     # Based on https://github.com/grafana/grafana/blob/v8.2.5/packaging/docker/run.sh
     "--homepath=${GF_PATHS_HOME}"
     "--config=${GF_PATHS_CONFIG}"
+    "--pidfile=${GRAFANA_PID_FILE}"
     "--packaging=docker"
     "$@"
     "cfg:default.log.mode=console"

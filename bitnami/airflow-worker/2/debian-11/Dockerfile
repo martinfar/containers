@@ -1,43 +1,68 @@
 FROM docker.io/bitnami/minideb:bullseye
+
+ARG TARGETARCH
+
+LABEL org.opencontainers.image.base.name="docker.io/bitnami/minideb:bullseye" \
+      org.opencontainers.image.created="2023-03-27T23:06:24Z" \
+      org.opencontainers.image.description="Application packaged by VMware, Inc" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.ref.name="2.5.2-debian-11-r4" \
+      org.opencontainers.image.title="airflow-worker" \
+      org.opencontainers.image.vendor="VMware, Inc." \
+      org.opencontainers.image.version="2.5.2"
+
 ENV HOME="/" \
-    OS_ARCH="amd64" \
+    OS_ARCH="${TARGETARCH:-amd64}" \
     OS_FLAVOUR="debian-11" \
     OS_NAME="linux"
 
 COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
-RUN install_packages acl ca-certificates curl gzip libbrotli1 libbsd0 libbz2-1.0 libc6 libcom-err2 libcrypt1 libcurl4 libedit2 libffi7 libgcc-s1 libgcrypt20 libgmp10 libgnutls30 libgpg-error0 libgssapi-krb5-2 libhogweed6 libicu67 libidn2-0 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libldap-2.4-2 liblzma5 libmariadb3 libmd0 libncursesw6 libnettle8 libnghttp2-14 libnsl2 libp11-kit0 libpsl5 libreadline8 librtmp1 libsasl2-2 libsasl2-modules libsqlite3-0 libssh2-1 libssl1.1 libstdc++6 libtasn1-6 libtinfo6 libtirpc3 libunistring2 libuuid1 libxml2 libxslt1.1 locales netbase procps tar zlib1g
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.14.0-152" --checksum 0c751c7e2ec0bc900a19dbec0306d6294fe744ddfb0fa64197ba1a36040092f0
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "wait-for-port" "1.0.3-152" --checksum 0694ae67645c416d9f6875e90c0f7cef379b4ac8030a6a5b8b5cc9ca77c6975d
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "python" "3.8.13-158" --checksum 5e09dc3db2d81167c999fb6ef5391a2204b3a93a2e30581785728b7fdc427f8f
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "postgresql-client" "10.21.0-151" --checksum 115eb173951cb02a87b553e857075f7c09a1d3f0dfd891d61b2b91fcbe556e95
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "ini-file" "1.4.3-151" --checksum 3f23f4fff5bd0ebead5b1a59c450e7b9806198864ff9c765439df14bfb9e1cf4
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "git" "2.37.1-1" --checksum 39ea3040baa552b4760c1100a3713f86493620c0a74121c1ceba50fe17341878
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "airflow-worker" "2.3.3-1" --checksum 857229215b67a61c37f801a0896d01d8bfc8eb3ad9add4e7db4629595921930b
-RUN apt-get update && apt-get upgrade -y && \
-    rm -r /var/lib/apt/lists /var/cache/apt/archives
+RUN install_packages ca-certificates curl krb5-user libbsd0 libbz2-1.0 libcdt5 libcgraph6 libcom-err2 libcrypt1 libedit2 libexpat1 libffi7 libgcc-s1 libgmp10 libgnutls30 libgss-dev libgssapi-krb5-2 libgvc6 libhogweed6 libicu67 libidn2-0 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5-dev libkrb5support0 libldap-2.4-2 libltdl7 liblzma5 libmariadb3 libmd0 libncursesw6 libnettle8 libnsl2 libp11-kit0 libpathplan4 libreadline8 libsasl2-2 libsasl2-modules libsqlite3-0 libssl1.1 libstdc++6 libtasn1-6 libtinfo6 libtirpc3 libunistring2 libuuid1 libxml2 libxslt1.1 locales netbase procps tzdata zlib1g
+RUN mkdir -p /tmp/bitnami/pkg/cache/ && cd /tmp/bitnami/pkg/cache/ && \
+    COMPONENTS=( \
+      "wait-for-port-1.0.6-2-linux-${OS_ARCH}-debian-11" \
+      "python-3.9.16-8-linux-${OS_ARCH}-debian-11" \
+      "postgresql-client-15.2.0-2-linux-${OS_ARCH}-debian-11" \
+      "ini-file-1.4.5-2-linux-${OS_ARCH}-debian-11" \
+      "gosu-1.16.0-3-linux-${OS_ARCH}-debian-11" \
+      "airflow-worker-2.5.2-1-linux-${OS_ARCH}-debian-11" \
+    ) && \
+    for COMPONENT in "${COMPONENTS[@]}"; do \
+      if [ ! -f "${COMPONENT}.tar.gz" ]; then \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz" -O ; \
+        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz.sha256" -O ; \
+      fi && \
+      sha256sum -c "${COMPONENT}.tar.gz.sha256" && \
+      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' && \
+      rm -rf "${COMPONENT}".tar.gz{,.sha256} ; \
+    done
+RUN apt-get autoremove --purge -y curl && \
+    apt-get update && apt-get upgrade -y && \
+    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 RUN chmod g+rwX /opt/bitnami
 RUN localedef -c -f UTF-8 -i en_US en_US.UTF-8
 RUN update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
+RUN mkdir /.local && chmod g+rwX /.local
 
 COPY rootfs /
 RUN /opt/bitnami/scripts/airflow-worker/postunpack.sh
 RUN /opt/bitnami/scripts/locales/add-extra-locales.sh
 ENV AIRFLOW_HOME="/opt/bitnami/airflow" \
-    APP_VERSION="2.3.3" \
+    APP_VERSION="2.5.2" \
     BITNAMI_APP_NAME="airflow-worker" \
     C_FORCE_ROOT="True" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
-    LD_LIBRARY_PATH="/opt/bitnami/python/lib/:/opt/bitnami/airflow/venv/lib/python3.8/site-packages/numpy.libs/:$LD_LIBRARY_PATH" \
+    LD_LIBRARY_PATH="/opt/bitnami/airflow/venv/lib/python3.8/site-packages/numpy.libs:/opt/bitnami/postgresql/lib:/opt/bitnami/python/lib:$LD_LIBRARY_PATH" \
     LIBNSS_WRAPPER_PATH="/opt/bitnami/common/lib/libnss_wrapper.so" \
     LNAME="airflow" \
     NSS_WRAPPER_GROUP="/opt/bitnami/airflow/nss_group" \
     NSS_WRAPPER_PASSWD="/opt/bitnami/airflow/nss_passwd" \
-    PATH="/opt/bitnami/common/bin:/opt/bitnami/python/bin:/opt/bitnami/postgresql/bin:/opt/bitnami/git/bin:/opt/bitnami/airflow/venv/bin:$PATH"
+    PATH="/opt/bitnami/common/bin:/opt/bitnami/python/bin:/opt/bitnami/postgresql/bin:/opt/bitnami/airflow/venv/bin:$PATH"
 
 EXPOSE 8793
 

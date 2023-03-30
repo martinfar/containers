@@ -5,20 +5,19 @@
 > MinIO&reg; is an object storage server, compatible with Amazon S3 cloud storage service, mainly used for storing unstructured data (such as photos, videos, log files, etc.).
 
 [Overview of Bitnami Object Storage based on MinIO&reg;](https://min.io/)
-
 Disclaimer: All software products, projects and company names are trademark(TM) or registered(R) trademarks of their respective holders, and use of them does not imply any affiliation or endorsement. This software is licensed to you subject to one or more open source licenses and VMware provides the software on an AS-IS basis. MinIO(R) is a registered trademark of the MinIO Inc. in the US and other countries. Bitnami is not affiliated, associated, authorized, endorsed by, or in any way officially connected with MinIO Inc. MinIO(R) is licensed under GNU AGPL v3.0.
 
 ## TL;DR
 
 ```console
-$ docker run --name minio bitnami/minio:latest
+docker run --name minio bitnami/minio:latest
 ```
 
 ### Docker Compose
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/minio/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/minio/docker-compose.yml > docker-compose.yml
+docker-compose up -d
 ```
 
 ## Why use Bitnami Images?
@@ -44,8 +43,7 @@ Non-root container images add an extra layer of security and are generally recom
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`2022`, `2022-debian-11`, `2022.7.26`, `2022.7.26-debian-11-r2`, `latest` (2022/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/minio/2022/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -54,21 +52,21 @@ Subscribe to project updates by watching the [bitnami/containers GitHub repo](ht
 The recommended way to get the Bitnami MinIO(R) Docker Image is to pull the prebuilt image from the [Docker Hub Registry](https://hub.docker.com/r/bitnami/minio).
 
 ```console
-$ docker pull bitnami/minio:latest
+docker pull bitnami/minio:latest
 ```
 
 To use a specific version, you can pull a versioned tag. You can view the [list of available versions](https://hub.docker.com/r/bitnami/minio/tags/) in the Docker Hub Registry.
 
 ```console
-$ docker pull bitnami/minio:[TAG]
+docker pull bitnami/minio:[TAG]
 ```
 
 If you wish, you can also build the image yourself by cloning the repository, changing to the directory containing the Dockerfile and executing the `docker build` command. Remember to replace the `APP`, `VERSION` and `OPERATING-SYSTEM` path placeholders in the example command below with the correct values.
 
 ```console
-$ git clone https://github.com/bitnami/containers.git
-$ cd bitnami/APP/VERSION/OPERATING-SYSTEM
-$ docker build -t bitnami/APP:latest .
+git clone https://github.com/bitnami/containers.git
+cd bitnami/APP/VERSION/OPERATING-SYSTEM
+docker build -t bitnami/APP:latest .
 ```
 
 ## Persisting your database
@@ -78,7 +76,7 @@ If you remove the container all your data will be lost, and the next time you ru
 For persistence you should mount a directory at the `/data` path.
 
 ```console
-$ docker run --name minio \
+docker run --name minio \
     --publish 9000:9000 \
     --publish 9001:9001 \
     --volume /path/to/minio-persistence:/data \
@@ -111,7 +109,7 @@ In this example, we will create a [MinIO(R) client](https://github.com/bitnami/c
 #### Step 1: Create a network
 
 ```console
-$ docker network create app-tier --driver bridge
+docker network create app-tier --driver bridge
 ```
 
 #### Step 2: Launch the MinIO(R) server container
@@ -119,7 +117,7 @@ $ docker network create app-tier --driver bridge
 Use the `--network app-tier` argument to the `docker run` command to attach the MinIO(R) container to the `app-tier` network.
 
 ```console
-$ docker run -d --name minio-server \
+docker run -d --name minio-server \
     --env MINIO_ROOT_USER="minio-root-user" \
     --env MINIO_ROOT_PASSWORD="minio-root-password" \
     --network app-tier \
@@ -131,7 +129,7 @@ $ docker run -d --name minio-server \
 Finally we create a new container instance to launch the MinIO(R) client and connect to the server created in the previous step. In this example, we create a new bucket in the MinIO(R) storage server:
 
 ```console
-$ docker run -it --rm --name minio-client \
+docker run -it --rm --name minio-client \
     --env MINIO_SERVER_HOST="minio-server" \
     --env MINIO_SERVER_ACCESS_KEY="minio-access-key" \
     --env MINIO_SERVER_SECRET_KEY="minio-secret-key" \
@@ -140,7 +138,7 @@ $ docker run -it --rm --name minio-client \
     mb minio/my-bucket
 ```
 
-### Using Docker Compose
+### Using a Docker Compose file
 
 When not specified, Docker Compose automatically sets up a new network and attaches all deployed services to that network. However, we will explicitly define a new `bridge` network named `app-tier`. In this example we assume that you want to connect to the MinIO(R) server from your own custom application image which is identified in the following snippet by the service name `myapp`.
 
@@ -175,11 +173,12 @@ services:
 >
 > 1. Please update the **YOUR_APPLICATION_IMAGE_** placeholder in the above snippet with your application image
 > 2. In your application container, use the hostname `minio` to connect to the MinIO(R) server. Use the environment variables `MINIO_SERVER_ACCESS_KEY` and `MINIO_SERVER_SECRET_KEY` to configure the credentials to access the MinIO(R) server.
+> 3. Make sure that the environment variables `MINIO_ROOT_PASSWORD` and `MINIO_SERVER_SECRET_KEY` meet the 8 character minimum length requirement enforced by MinIO(R).
 
 Launch the containers using:
 
 ```console
-$ docker-compose up -d
+docker-compose up -d
 ```
 
 ## Configuration
@@ -189,16 +188,16 @@ MiNIO can be configured via environment variables as detailed at [MinIO(R) docum
 A MinIO(R) Client  (`mc`) is also shipped on this image that can be used to perform administrative tasks as described at the [MinIO(R) Client documentation](https://docs.min.io/docs/minio-admin-complete-guide.html). In the example below, the client is used to obtain the server info:
 
 ```console
-$ docker run --name minio -d bitnami/minio:latest
-$ docker exec minio mc admin info local
+docker run --name minio -d bitnami/minio:latest
+docker exec minio mc admin info local
 ```
 
 or using Docker Compose:
 
 ```console
-$ curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/minio/docker-compose.yml > docker-compose.yml
-$ docker-compose up -d
-$ docker-compose exec minio mc admin info local
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/minio/docker-compose.yml > docker-compose.yml
+docker-compose up -d
+docker-compose exec minio mc admin info local
 ```
 
 ### Creating default buckets
@@ -206,7 +205,7 @@ $ docker-compose exec minio mc admin info local
 You can create a series of buckets in the MinIO(R) server during the initialization of the container by setting the environment variable `MINIO_DEFAULT_BUCKETS` as shown below (policy is optional):
 
 ```console
-$ docker run --name minio \
+docker run --name minio \
     --publish 9000:9000 \
     --publish 9001:9001 \
     --env MINIO_DEFAULT_BUCKETS='my-first-bucket:policy,my-second-bucket' \
@@ -231,7 +230,7 @@ You can secure the access to MinIO(R) server with TLS as detailed at [MinIO(R) d
 This image expects the variable `MINIO_SCHEME` set to `https` and certificates to be mounted at the `/certs` directory. You can put your key and certificate files on a local directory and mount it in the container as shown below:
 
 ```console
-$ docker run --name minio \
+docker run --name minio \
     --publish 9000:9000 \
     --publish 9001:9001 \
     --volume /path/to/certs:/certs \
@@ -348,7 +347,7 @@ MinIO(R) configures the access & secret key during the 1st initialization based 
 When using persistence, MinIO(R) will reuse the data configured during the 1st initialization by default, ignoring whatever values are set on these environment variables. You can force MinIO(R) to reconfigure the keys based on the environment variables by setting the `MINIO_FORCE_NEW_KEYS` environment variable to `yes`:
 
 ```console
-$ docker run --name minio \
+docker run --name minio \
     --publish 9000:9000 \
     --publish 9001:9001 \
     --env MINIO_FORCE_NEW_KEYS="yes" \
@@ -363,13 +362,13 @@ $ docker run --name minio \
 The Bitnami MinIO(R) Docker image sends the container logs to the `stdout`. To view the logs:
 
 ```console
-$ docker logs minio
+docker logs minio
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose logs minio
+docker-compose logs minio
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -381,7 +380,7 @@ To enable HTTP log trace, you can set the environment variable `MINIO_HTTP_TRACE
 When setting this environment variable to `/opt/bitnami/minio/log/minio.log`, the logs will be sent to the `stdout`.
 
 ```console
-$ docker run --name minio \
+docker run --name minio \
     --publish 9000:9000 \
     --publish 9001:9001 \
     --env MINIO_HTTP_TRACE=/opt/bitnami/minio/log/minio.log \
@@ -408,7 +407,7 @@ Bitnami provides up-to-date versions of MinIO(R), including security patches, so
 #### Step 1: Get the updated image
 
 ```console
-$ docker pull bitnami/minio:latest
+docker pull bitnami/minio:latest
 ```
 
 or if you're using Docker Compose, update the value of the image property to
@@ -419,31 +418,31 @@ or if you're using Docker Compose, update the value of the image property to
 Stop the currently running container using the command
 
 ```console
-$ docker stop minio
+docker stop minio
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose stop minio
+docker-compose stop minio
 ```
 
 Next, take a snapshot of the persistent volume `/path/to/minio-persistence` using:
 
 ```console
-$ rsync -a /path/to/minio-persistence /path/to/minio-persistence.bkp.$(date +%Y%m%d-%H.%M.%S)
+rsync -a /path/to/minio-persistence /path/to/minio-persistence.bkp.$(date +%Y%m%d-%H.%M.%S)
 ```
 
 #### Step 3: Remove the currently running container
 
 ```console
-$ docker rm -v minio
+docker rm -v minio
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose rm -v minio
+docker-compose rm -v minio
 ```
 
 #### Step 4: Run the new image
@@ -451,18 +450,18 @@ $ docker-compose rm -v minio
 Re-create your container from the new image.
 
 ```console
-$ docker run --name minio bitnami/minio:latest
+docker run --name minio bitnami/minio:latest
 ```
 
 or using Docker Compose:
 
 ```console
-$ docker-compose up minio
+docker-compose up minio
 ```
 
 ## Contributing
 
-We'd love for you to contribute to this Docker image. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues), or submit a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
+We'd love for you to contribute to this Docker image. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues) or submitting a [pull request](https://github.com/bitnami/containers/pulls) with your contribution.
 
 ## Issues
 
@@ -476,13 +475,13 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

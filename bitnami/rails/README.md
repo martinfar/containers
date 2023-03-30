@@ -5,7 +5,6 @@
 > Rails is a web application framework running on the Ruby programming language.
 
 [Overview of Rails](http://rubyonrails.org/)
-
 Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
@@ -13,9 +12,9 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 ### Local workspace
 
 ```console
-$ mkdir ~/myapp && cd ~/myapp
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/rails/docker-compose.yml
-$ docker-compose up
+mkdir ~/myapp && cd ~/myapp
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/rails/docker-compose.yml
+docker-compose up
 ```
 
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options for the [MariaDB container](https://github.com/bitnami/containers/blob/main/bitnami/mariadb#readme) for a more secure deployment.
@@ -33,9 +32,7 @@ $ docker-compose up
 
 Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
 
-
-* [`7`, `7-debian-11`, `7.0.3-1`, `7.0.3-1-debian-11-r1`, `latest` (7/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/rails/7/debian-11/Dockerfile)
-* [`6`, `6-debian-11`, `6.1.6-1`, `6.1.6-1-debian-11-r1` (6/debian-11/Dockerfile)](https://github.com/bitnami/containers/blob/main/bitnami/rails/6/debian-11/Dockerfile)
+You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
 Subscribe to project updates by watching the [bitnami/containers GitHub repo](https://github.com/bitnami/containers).
 
@@ -61,13 +58,13 @@ cd ~/myapp
 Download the [docker-compose.yml](https://raw.githubusercontent.com/bitnami/containers/main/bitnami/rails/docker-compose.yml) file in the application directory:
 
 ```console
-$ curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/rails/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/rails/docker-compose.yml
 ```
 
 Finally launch the Rails application development environment using:
 
 ```console
-$ docker-compose up
+docker-compose up
 ```
 
 Among other things, the above command creates a container service, named `myapp`, for Rails development and bootstraps a new Rails application in the application directory. You can use your favourite IDE for developing the application.
@@ -91,51 +88,52 @@ Commands can be launched inside the `myapp` Rails Development Container with `do
 The general structure of the `exec` command is:
 
 ```console
-$ docker-compose exec <service> <command>
+docker-compose exec <service> <command>
 ```
 
 , where `<service>` is the name of the container service as described in the `docker-compose.yml` file and `<command>` is the command you want to launch inside the service.
 
 Following are a few examples of launching some commonly used Rails development commands inside the `myapp` service container.
 
-- List all available rake tasks:
+* List all available rake tasks:
 
   ```console
-  $ docker-compose exec myapp bundle exec rake -T
+  docker-compose exec myapp bundle exec rake -T
   ```
 
-- Get information about the Rails environment:
+* Get information about the Rails environment:
 
   ```console
-  $ docker-compose exec myapp bundle exec rake about
+  docker-compose exec myapp bundle exec rake about
   ```
 
-- Launch the Rails console:
+* Launch the Rails console:
 
   ```console
-  $ docker-compose exec myapp rails console
+  docker-compose exec myapp rails console
   ```
 
-- Generate a scaffold:
+* Generate a scaffold:
 
   ```console
-  $ docker-compose exec myapp rails generate scaffold User name:string email:string
+  docker-compose exec myapp rails generate scaffold User name:string email:string
   ```
 
-- Run database migrations:
+* Run database migrations:
 
   ```console
-  $ docker-compose exec myapp bundle exec rake db:migrate
+  docker-compose exec myapp bundle exec rake db:migrate
   ```
 
 > **Note**
 >
 > Database migrations are automatically applied during the start up of the Rails Development Container. This means that the `myapp` service could also be restarted to apply the database migrations.
+>
 > ```console
 > $ docker-compose restart myapp
 > ```
 
-## Configuring your database:
+## Configuring your database
 
 You can configure the MariaDB hostname and database name to use for development purposes using the environment variables **DATABASE_HOST** & **DATABASE_NAME**.
 
@@ -151,7 +149,7 @@ services:
   ...
 ```
 
-## Running additional services:
+## Running additional services
 
 Sometimes, your application will require extra pieces, such as background processing tools like Resque
 or Sidekiq.
@@ -185,31 +183,31 @@ To add a Rubygem to your application, update the `Gemfile` in the application di
 For example, to add the `httparty` Rubygem:
 
 ```console
-$ echo "gem 'httparty'" >> Gemfile
-$ docker-compose restart myapp
+echo "gem 'httparty'" >> Gemfile
+docker-compose restart myapp
 ```
 
 When the `myapp` service container is restarted, it will install all the missing gems before starting the WEBrick Rails application server.
 
-# Notable Changes
+## Notable Changes
 
 ## 6.0.2-2-debian-10-r52
 
-- Decrease the size of the container. The configuration logic is now based on Bash scripts in the `rootfs/` folder.
+* Decrease the size of the container. The configuration logic is now based on Bash scripts in the `rootfs/` folder.
 
-# Contributing
+## Contributing
 
-We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/blob/main/bitnami/rails/issues), or submit a [pull request](https://github.com/bitnami/containers/blob/main/bitnami/rails/pulls) with your contribution.
+We'd love for you to contribute to this container. You can request new features by creating an [issue](https://github.com/bitnami/containers/issues/new) or submitting a [pull request](https://github.com/bitnami/containers/pulls/new) with your contribution.
 
 ## Issues
 
-If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/blob/main/bitnami/rails/issues/new). Be sure to include the following information in your issue:
+If you encountered a problem running this container, you can file an [issue](https://github.com/bitnami/containers/issues/new). Be sure to include the following information in your issue:
 
-- Host OS and version
-- Docker version (`docker version`)
-- Output of `docker info`
-- Version of this container
-- The command you used to run the container, and any relevant output you saw (masking any sensitive information)
+* Host OS and version
+* Docker version (`docker version`)
+* Output of `docker info`
+* Version of this container
+* The command you used to run the container, and any relevant output you saw (masking any sensitive information)
 
 ### Community supported solution
 
@@ -221,13 +219,13 @@ New versions and releases cadence are not going to be affected. Once a new versi
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2023 Bitnami
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

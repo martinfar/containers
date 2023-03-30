@@ -52,18 +52,7 @@ pgbouncer_validate() {
         fi
     }
 
-    check_ip_value() {
-        if ! validate_ipv4 "${!1}"; then
-            if ! is_hostname_resolved "${!1}"; then
-                print_validation_error "The value for $1 should be an IPv4 address or it must be a resolvable hostname"
-            else
-                debug "Hostname resolvable for $1"
-            fi
-        fi
-    }
-
     check_valid_port "PGBOUNCER_PORT"
-    check_ip_value "PGBOUNCER_LISTEN_ADDRESS"
     check_multi_value "PGBOUNCER_AUTH_TYPE" "any cert md5 hba pam plain scram-sha-256 trust"
     ! is_empty_value "$PGBOUNCER_POOL_MODE" && check_multi_value "PGBOUNCER_POOL_MODE" "session statement transaction"
     if [[ "$PGBOUNCER_AUTH_TYPE" = "trust" ]]; then
@@ -216,10 +205,26 @@ pgbouncer_initialize() {
         if ! is_empty_value "$PGBOUNCER_CONNECT_QUERY"; then
             database_value+=" connect_query='${PGBOUNCER_CONNECT_QUERY}'"
         fi
-        ini-file set --section "databases" --key "$PGBOUNCER_DATABASE" --value "$database_value" "$PGBOUNCER_CONF_FILE"
+        ini-file set --ignore-inline-comments --section "databases" --key "$PGBOUNCER_DATABASE" --value "$database_value" "$PGBOUNCER_CONF_FILE"
+
+        i=0;
+        while true; VAR_NAME="PGBOUNCER_DSN_${i}";
+        do
+            if [ -z "${!VAR_NAME+x}" ]; then
+                break;
+            else
+                dsn=${!VAR_NAME};
+                ini-file set --ignore-inline-comments --section databases --key "$(echo "$dsn" | cut -d = -f 1)" --value "$(echo "$dsn" | cut -d = -f 2-)" "$PGBOUNCER_CONF_FILE";
+                i=$(( "$i" + 1 ));
+            fi;
+        done;
+
         local -r -a key_value_pairs=(
             "listen_port:${PGBOUNCER_PORT}"
             "listen_addr:${PGBOUNCER_LISTEN_ADDRESS}"
+            "unix_socket_dir:${PGBOUNCER_SOCKET_DIR}"
+            "unix_socket_mode:${PGBOUNCER_SOCKET_MODE}"
+            "unix_socket_group:${PGBOUNCER_SOCKET_GROUP}"
             "auth_file:${PGBOUNCER_AUTH_FILE}"
             "auth_type:${PGBOUNCER_AUTH_TYPE}"
             "auth_query:${PGBOUNCER_AUTH_QUERY}"
@@ -243,6 +248,20 @@ pgbouncer_initialize() {
             "min_pool_size:${PGBOUNCER_MIN_POOL_SIZE}"
             "reserve_pool_size:${PGBOUNCER_RESERVE_POOL_SIZE}"
             "ignore_startup_parameters:${PGBOUNCER_IGNORE_STARTUP_PARAMETERS}"
+            "log_connections:${PGBOUNCER_LOG_CONNECTIONS}"
+            "log_disconnections:${PGBOUNCER_LOG_DISCONNECTIONS}"
+            "log_pooler_errors:${PGBOUNCER_LOG_POOLER_ERRORS}"
+            "log_stats:${PGBOUNCER_LOG_STATS}"
+            "stats_period:${PGBOUNCER_STATS_PERIOD}"
+            "server_lifetime:${PGBOUNCER_SERVER_LIFETIME}"
+            "server_idle_timeout:${PGBOUNCER_SERVER_IDLE_TIMEOUT}"
+            "server_connect_timeout:${PGBOUNCER_SERVER_CONNECT_TIMEOUT}"
+            "server_login_retry:${PGBOUNCER_SERVER_LOGIN_RETRY}"
+            "client_login_timeout:${PGBOUNCER_CLIENT_LOGIN_TIMEOUT}"
+            "autodb_idle_timeout:${PGBOUNCER_AUTODB_IDLE_TIMEOUT}"
+            "query_timeout:${PGBOUNCER_QUERY_TIMEOUT}"
+            "query_wait_timeout:${PGBOUNCER_QUERY_WAIT_TIMEOUT}"
+            "client_idle_timeout:${PGBOUNCER_CLIENT_IDLE_TIMEOUT}"
         )
         for pair in "${key_value_pairs[@]}"; do
             local key value
